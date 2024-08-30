@@ -272,7 +272,7 @@ def export_to_xl():
 
     if df.empty:
         print("No record found in the database..")
-        flash(f'Veritabanında kayıt yok!', 'danger')
+        flash(f'Veritabanında kayıt olmadığı için aktarım yapılmadı', 'warning')
         # return redirect(url_for('index'))
     else:
         print("There are records in the db..")

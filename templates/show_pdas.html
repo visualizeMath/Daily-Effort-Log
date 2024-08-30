@@ -121,6 +121,7 @@
                   if (data.success) {
                       // Remove the row from the table
                       rowToDelete.remove();
+                      location.reload();
                   } else {
                       alert("Failed to delete task: " + (data.error || 'Unknown error'));
                   }
