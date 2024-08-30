@@ -130,7 +130,10 @@ def submit_log():
                  (task_id, task_aciklama, formatted_tarih,gun, harcanan_efor, yapilan_is))
     conn.commit()
     conn.close()
-
+    
+    if c.rowcount == 0:
+        flash(f'Kayıt oluşturulurken hata oluştu.', 'danger')
+    flash(f'{formatted_tarih}- {gun} - {task_aciklama} icin efor kaydı girildi.', 'success')
     return redirect(url_for('index'))
 
 @app.route('/submit_pdas_task', methods=['POST'])
@@ -146,6 +149,10 @@ def submit_pdas_task():
                  (pdas_task_id, pdas_task_aciklama, bagli_sprint))
     conn.commit()
     conn.close()
+
+    if c.rowcount == 0:
+        flash(f'PDAS kaydı kaydedilemedi.', 'danger')
+    flash(f'{pdas_task_id} - {pdas_task_aciklama} PDAS kaydı girildi.', 'success')
 
     return redirect(url_for('index'))
 
@@ -175,6 +182,8 @@ def delete_task():
     task_id = data.get('task_id')
     
     if not task_id:
+         
+        flash(f'{task_id} numaralı PDAS taskı bulunamadi.', 'danger')
         return jsonify({"success": False, "error": "Task ID not provided."}), 400
     
     try:
@@ -188,8 +197,10 @@ def delete_task():
 
         # Check if a row was actually deleted
         if cursor.rowcount == 0:
+            flash(f'{task_id} numaralı PDAS taskı bulunamadi.', 'danger')
             return jsonify({"success": False, "error": "Task not found."}), 404
 
+        flash(f'{task_id} numaralı PDAS taskı silindi.', 'success')
         return jsonify({"success": True}), 200
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500
@@ -205,6 +216,7 @@ def delete_log():
     # print('app.py icinde gelen task id: '+task_id)
 
     if not task_id:
+        flash(f'{task_id} numaralı efor kaydi bulunamadi.', 'danger')
         return jsonify({"success": False, "error": "Task ID not provided."}), 400
         # flash(f'ID bulunamadı: {str(e)}', 'danger')
     
@@ -213,11 +225,18 @@ def delete_log():
         conn = sqlite3.connect('daily_log.db')
         cursor = conn.cursor()
 
-        # effort_text= cursor.execute("select yapilan_is FROM daily_log WHERE id = ?", (task_id,))
-        # conn.commit()
-        # if not effort_text:
-        #     effort_text=effort_text[:25]+' (...)'
-        #     print('effort text: '+effort_text)
+        cursor.execute("select yapilan_is FROM daily_log WHERE id = ?", (task_id,))
+        conn.commit()
+        result= cursor.fetchone()
+
+        if result is not None and result[0]:
+            effort_text=result[0]
+            # print(effort_text)
+            
+
+        if not effort_text and len(effort_text)>15:
+            effort_text=effort_text[:15]+' (...)'
+            # print('effort text: '+effort_text)
 
         cursor.execute("DELETE FROM daily_log WHERE id = ?", (task_id,))
         conn.commit()
@@ -227,7 +246,7 @@ def delete_log():
             flash(f'Silinecek kayit bulunamadi: {str(e)}', 'danger')
             return jsonify({"success": False, "error": "Log not found."}), 404
         # flash('Silindi: {effort_text}!', 'success')
-
+        flash(f'Silindi: {effort_text}', 'success')
         return jsonify({"success": True}), 200
     except Exception as e:
         flash(f'An error occurred: {str(e)}', 'danger')
@@ -251,13 +270,21 @@ def export_to_xl():
     query = 'SELECT * FROM daily_log'
     df = pd.read_sql_query(query, conn)
 
-    # Close the database connection
-    conn.close()
+    if df.empty:
+        print("No record found in the database..")
+        flash(f'Veritabanında kayıt yok!', 'danger')
+        # return redirect(url_for('index'))
+    else:
+        print("There are records in the db..")
 
-    # Write the DataFrame to an Excel file
-    df.to_excel(output_file, index=False, engine='openpyxl')
+        # Close the database connection
+        conn.close()
 
-    print(f"Data exported successfully to {output_file}")
+        # Write the DataFrame to an Excel file
+        df.to_excel(output_file, index=False, engine='openpyxl')
+
+        # print(f"Data exported successfully to {output_file}")
+        flash(f'Dosya buraya kaydedildi: {output_file}', 'success')
     return redirect(url_for('index'))
 
 if __name__ == '__main__':
