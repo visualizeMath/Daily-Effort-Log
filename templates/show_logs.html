@@ -1,0 +1,198 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container d-flex justify-content-center mt-2 mb-3">
+    <h2>Girilen Eforlar</h2>
+</div>
+
+<div class="container mt-3">
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}    
+</div>
+
+{% if not logs  %}
+<div class="container d-flex justify-content-center">
+    <table class="table table-striped">
+        <thead>
+            <tr class="satir">
+                <!-- <th scope="col">ID</th> -->
+                <th scope="col-2">Tarih</th>
+                <th scope="col-1">Gün</th>
+                <th scope="col-1">Task ID</th>
+                <th scope="col-2">Task Açıklaması</th>
+                <th scope="col-5">Yapılan İş</th>
+                <th scope="col-1">Efor</th>
+                <th scope="col-1"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="satir">
+                <td class="col fs4 fst-italic">Henüz efor kaydı yok</td>
+            </tr>
+        </tbody>
+    </table>
+   
+</div>
+<div class="container d-flex ms-5 mt-4">
+   
+    
+    {% else %}
+    <table class="table table-striped">
+        <thead>
+            <tr class="satir">
+                <!-- <th scope="col">ID</th> -->
+                <th scope="col-2">Tarih</th>
+                <th scope="col-1">Gün</th>
+                <th scope="col-1">Task ID</th>
+                <th scope="col-2">Task Açıklaması</th>
+                <th scope="col-5">Yapılan İş</th>
+                <th scope="col-1">Efor</th>
+                <th scope="col-1"></th>
+            </tr>
+        </thead>
+        <tbody>         
+            
+            {% for log in logs %}
+            
+            <tr class="satir">
+                <!-- <td>{{ log[0] }}</td> -->
+                <td class="col-2">{{ log[3] }}</td>
+                <td class="col-1">{{ log[4] }}</td>
+                <td class="col-1">{{ log[1] }}</td>
+                <td class="col-2">{{ log[2] }}</td>
+                <td class="col-5" id="log-{{ loop.index }}">{{ log[6] }}</td>
+                <td class="col-1">{{ log[5] }}</td>
+                <td class="col-1">
+                    <button type="button" class="btn btn-secondary btn-sm ms-3 rounded-pill copy-btn"  data-log-id="log-{{ loop.index }}">
+                        <i class="fa-regular fa-copy"></i>
+                    </button>
+                </td>
+                <td class="col-1">
+                    <button type="button" class="btn btn-danger btn-sm delete-btn" data-task-id="{{ log[0] }}">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                </td> 
+                <td style="display: none;">{{ log[0] }}</td>                       
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %} 
+</div>
+
+<div class="modal fade" id="deleteLogModal" tabindex="-1" aria-labelledby="deleteLogModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteLogModalLabel">Silme İşlemi</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Seçilen efor kaydı silinecek. Emin misiniz?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+          <button type="button" class="btn btn-danger" id="confirmDeleteButton">SİL</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var copyButtons = document.querySelectorAll('.copy-btn');
+
+    copyButtons.forEach(function(button) {
+        button.addEventListener('click', function() {
+            var logId = this.getAttribute('data-log-id');
+            var textToCopy = document.getElementById(logId).textContent;
+
+            // Copy the text to the clipboard
+            navigator.clipboard.writeText(textToCopy).then(function() {
+            }).catch(function(error) {
+            });
+        });
+    });
+});
+
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var deleteButtons = document.querySelectorAll('.delete-btn');
+      var taskIDToDelete = null;
+      var rowToDelete = null;
+
+      deleteButtons.forEach(function(button) {
+          button.addEventListener('click', function() {
+              
+              taskIDToDelete = this.getAttribute('data-task-id');
+              rowToDelete = this.closest('tr');
+              // Show the modal by setting the appropriate Bootstrap classes
+              var deleteModal = document.getElementById('deleteLogModal');
+              deleteModal.classList.add('show');
+              deleteModal.style.display = 'block';
+              document.body.classList.add('modal-open');
+          });
+      });
+  
+      // Handle the delete confirmation
+      document.getElementById('confirmDeleteButton').addEventListener('click', function() {
+          if (taskIDToDelete && rowToDelete) {
+            // console.log("taskIDToDelete: "+taskIDToDelete);
+            // console.log("rowToDelete: "+rowToDelete);
+            // console.log("Gonderilen JSON: "+JSON.stringify({ task_id: taskIDToDelete }))
+
+              fetch('/delete_log', {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({ task_id: taskIDToDelete })
+              })
+              .then(response => {
+                  if (!response.ok) {
+                      throw new Error('Network response was not ok');
+                  }
+                  return response.json();
+              })
+              .then(data => {
+                  if (data.success) {
+                      // Remove the row from the table
+                      rowToDelete.remove();
+                      location.reload();
+                  } else {
+                      alert("Failed to delete task: " + (data.error || 'Unknown error'));
+                  }
+              })
+              .catch(error => console.error('Error:', error));
+          }
+  
+          // Hide the modal after the operation
+          var deleteModal = document.getElementById('deleteLogModal');
+          deleteModal.classList.remove('show');
+          deleteModal.style.display = 'none';
+          document.body.classList.remove('modal-open');
+      });
+  
+      // Handle closing the modal with the "Cancel" button or the close button
+      document.querySelectorAll('.btn-close, .btn-secondary').forEach(function(button) {
+          button.addEventListener('click', function() {
+              var deleteModal = document.getElementById('deleteLogModal');
+              deleteModal.classList.remove('show');
+              deleteModal.style.display = 'none';
+              document.body.classList.remove('modal-open');
+          });
+      });
+  });
+  </script>
+  <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script> -->
+{% endblock %}

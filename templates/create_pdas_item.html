@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="mt-2 mb-5 d-flex justify-content-center">
+    <h3>PDAS Taskı Oluştur</h3>
+</div>
+<div class="container col-md-6">
+    <form method="post" action="{{ url_for('submit_pdas_task') }}">
+        <div class="row">
+            <div class="mb-3 col-3">
+                <label for="bagli_sprint" class="form-label">Sprint No</label>
+                <select class="form-select" id="bagli_sprint" name="bagli_sprint" required>
+                    <!-- <option value="" disabled selected>No</option> -->
+                    <option value="16">16</option>
+                    <option value="17">17</option>
+                    <option value="18">18</option>
+                    <option value="19">19</option>
+                    <option value="20">20</option>
+                    <option value="21">21</option>
+                    <option value="22">22</option>
+                    <option value="23">23</option>
+                    <option value="24">24</option>
+                    
+                    <!-- Add more options as needed -->
+                </select>
+            </div>
+
+            <div class="mb-3 col-4">
+                <label for="pdas_task_id" class="form-label">PDAS Task ID</label>
+                <input type="text" class="form-control" id="pdas_task_id" name="pdas_task_id" autocomplete="off" required >
+            </div>
+
+        </div>
+        
+           
+            
+            <div class="mb-3 col">
+                <label for="pdas_task_aciklama" class="form-label">PDAS Task Açıklaması</label>
+                <input type="text" class="form-control" id="pdas_task_aciklama" name="pdas_task_aciklama" autocomplete="off" required>
+            </div>
+        
+        <div class="container d-flex justify-content-center"><button type="submit" class="btn btn-primary">Kaydet</button></div>
+    </form>
+</div>
+
+<script>
+    document.getElementById('tarih').addEventListener('change', function() {
+        var tarih = new Date(this.value);
+        var gunler = ['Pazar', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi'];
+        var gun = gunler[tarih.getDay()];
+        document.getElementById('gun').value = gun;
+    });
+
+   
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    var today = new Date();
+    var day = String(today.getDate()).padStart(2,'0');
+    var month= String(today.getMonth()+1).padStart(2,'0');
+    var year = today.getFullYear();
+
+    var tarih = year+'-'+month+'-'+day;
+    
+    // console.log('Tarih: '+tarih)
+    document.getElementById('tarih').value=tarih;
+
+    // var tarih = new Date(this.value);
+        var gunler = ['Pazar', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi'];
+        var gun = gunler[today.getDay()];
+        document.getElementById('gun').value = gun;
+
+    });
+</script>
+{% endblock %}

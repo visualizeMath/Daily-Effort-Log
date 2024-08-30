@@ -1,0 +1,202 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="mt-2 mb-5 d-flex justify-content-center">
+    <h2>Efor gir</h2>
+</div>
+<div class="container col-md-6">
+   
+    
+    <form method="post" action="{{ url_for('submit_log') }}">
+
+        <div class="row">
+            <div class="mb-3 col-3">
+                <label for="sprint_no" class="form-label">Sprint No</label>
+                <select class="form-select" id="sprint_no" name="sprint_no" required>
+                    <option value="Select">Select</option>
+                    <option value="16">16</option>
+                    <option value="17">17</option>
+                    <option value="18">18</option>
+                    <option value="19">19</option>
+                    <option value="20">20</option>
+                    <option value="21">21</option>
+                    <option value="22">22</option>
+                    <option value="23">23</option>
+                    <option value="24">24</option>
+                    
+                    <!-- Add more options as needed -->
+                </select>
+            </div>
+    
+            <div class="mb-3 col-3">
+                <label for="harcanan_efor" class="form-label">Efor</label>
+                <input type="number" step="1" class="form-control" value="8" id="harcanan_efor" name="harcanan_efor" required>
+            </div>
+    
+        </div>
+       
+        <div class="row">
+
+            <div class="mb-3 col-4">
+                <label for="task_id" class="form-label">Task ID</label>
+                <select class="form-select" id="task_id" name="task_id" required>
+                    <!-- <option value="" disabled selected>ID</option> -->
+                    {% for task_id in task_ids %}
+                        <option value="{{ task_id }}">{{ task_id }}</option>
+                    {% endfor %}
+                    <!-- Add more options as needed -->
+                </select>
+            </div>
+           
+
+            <div class="mb-3 col">
+                <label for="task_aciklama" class="form-label">Task Açıklaması</label>
+                <input type="text" class="form-control" id="task_aciklama" name="task_aciklama" autocomplete="off" readonly>
+            </div>
+        </div>
+        
+       
+
+        <div class="row">
+            <div class="mb-3 col-6">
+                <label for="tarih" class="form-label">Tarih</label>
+                <input type="date" class="form-control" id="tarih" name="tarih" required>
+            </div>
+
+            <div class="mb-3 col-5">
+                <label for="gun" class="form-label">Gün</label>
+                <input type="text" class="form-control" id="gun" name="gun" readonly>
+            </div>
+        </div>
+      
+        
+        
+        <div class="mb-3">
+            <label for="yapilan_is" class="form-label">Yapılan İş</label>
+            <textarea class="form-control" id="yapilan_is" name="yapilan_is" rows="4" autocomplete="off" required></textarea>
+        </div>
+        <div class="container d-flex justify-content-center"><button type="submit" class="btn btn-primary">Kaydet</button></div>
+    </form>
+</div>
+
+<script>
+    document.getElementById('tarih').addEventListener('change', function() {
+        var tarih = new Date(this.value);
+        var gunler = ['Pazar', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi'];
+        var gun = gunler[tarih.getDay()];
+        document.getElementById('gun').value = gun;
+    });   
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    var today = new Date();
+    var day = String(today.getDate()).padStart(2,'0');
+    var month= String(today.getMonth()+1).padStart(2,'0');
+    var year = today.getFullYear();
+
+    var tarih = year+'-'+month+'-'+day;
+    
+    // console.log('Tarih: '+tarih)
+    document.getElementById('tarih').value=tarih;
+
+    // var tarih = new Date(this.value);
+        var gunler = ['Pazar', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi'];
+        var gun = gunler[today.getDay()];
+        document.getElementById('gun').value = gun;
+
+    });
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var sprintSelect = document.getElementById('sprint_no');
+       
+        
+        sprintSelect.addEventListener('change', function() {
+            var selectedSprint = sprintSelect.value;
+            var taskDescr = document.getElementById('task_aciklama');
+            taskDescr.value=''//Clear content
+            // console.log('Selected Sprint:', selectedSprint); // Debugging
+            // console.log('Task Description:', taskDescr.value); // Debugging
+            
+            // Create the POST request
+            fetch('/get_dependent_tasks', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ sprint_no: selectedSprint.toString() })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Populate the task_id select field
+                var taskSelect = document.getElementById('task_id');
+                taskSelect.innerHTML = ''; // Clear existing options
+                
+                // Add the "Select" option as the first element
+                var selectOption = document.createElement('option');
+                selectOption.value = "";
+                selectOption.textContent = "Select";
+                taskSelect.appendChild(selectOption);
+
+                data.forEach(task_id => {
+                    
+                        var option = document.createElement('option');
+                        option.value = task_id;
+                        option.textContent = task_id;
+                        taskSelect.appendChild(option);
+                    
+                   
+                });
+            })
+            .catch(error => console.error('Error fetching task IDs:', error));
+        });
+    });
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var selectedTaskID = document.getElementById('task_id');
+        
+        selectedTaskID.addEventListener('change', function() {
+            var selected_task_id = selectedTaskID.value;
+            
+            console.log('Selected task id:', selected_task_id); // Debugging
+            
+            // Create the POST request
+            fetch('/get_selectedtaskname', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ task_id: selected_task_id.toString() })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok for selected task id');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Populate the task_aciklama select field
+                var taskSelect = document.getElementById('task_aciklama');
+                taskSelect.value = ''; // Clear existing options
+                
+                var yapilanIs = document.getElementById('yapilan_is');//ibod
+                yapilanIs.innerHTML = ''; // Clear
+
+                taskSelect.value=data;
+                yapilanIs.value="PDAS-"+ selected_task_id+": ";
+
+            })
+            .catch(error => console.error('Error fetching task IDs:', error));
+        });
+    });
+</script>
+
+{% endblock %}

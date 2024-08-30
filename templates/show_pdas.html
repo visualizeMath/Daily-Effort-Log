@@ -1,0 +1,154 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container d-flex justify-content-center mt-2 mb-3">
+    <h3>PDAS kayıtları</h3>
+</div>
+<div class="container d-flex ms-5 mt-4">
+    {% if not logs  %}
+    <table class="table table-striped">
+    
+        <thead>
+            <!-- pdas_task_id TEXT,
+                        pdas_task_aciklama TEXT,
+                        bagli_sprint TEXT -->
+            <tr class="satir">
+                <!-- <th scope="col">ID</th> -->
+                <th scope="col-2">PDAS Task ID</th>
+                <th scope="col-4">Task Açıklaması</th>
+                <th scope="col">Sprint</th>
+                <!-- <th scope="col-1 ms-1 px-1"></th>            -->
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="satir">
+                <td class="col fs4 fst-italic">PDAS kaydı bulunamadı!</td>   
+            </tr>
+        </tbody>
+    </table>
+    {% else %}
+    <table class="table table-striped">
+    
+        <thead>
+            <!-- pdas_task_id TEXT,
+                        pdas_task_aciklama TEXT,
+                        bagli_sprint TEXT -->
+            <tr class="satir">
+                <!-- <th scope="col">ID</th> -->
+                <th scope="col-2">PDAS Task ID</th>
+                <th scope="col-4">Task Açıklaması</th>
+                <th scope="col">Sprint</th>
+                <!-- <th scope="col-1 ms-1 px-1"></th>            -->
+            </tr>
+        </thead>
+
+    <tbody>
+        {% for log in logs %}
+        <tr class="satir">
+            <!-- <td>{{ log[0] }}</td> -->
+            <td class="col-2">{{ log[1] }}</td>
+            <td class="col-4">{{ log[2] }}</td>
+            <td class="col d-flex align-items-center">{{ log[3] }}
+                <button type="button" class="btn btn-danger btn-xs delete-btn ms-5" data-task-id="{{ log[1] }}">
+                    <i class="fa-solid fa-trash"></i>
+                </button>
+            </td>
+        </tr>
+        {% endfor %}
+
+        <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script> -->
+        <!-- Modal -->
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteConfirmationModal" tabindex="-1" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteConfirmationModalLabel">Silme İşlemini Onaylayın</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Seçilen PDAS taskı silinecek. Emin misiniz?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+          <button type="button" class="btn btn-danger" id="confirmDeleteButton">SİL</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    </tbody>
+</table>
+    {% endif %}  
+    
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var deleteButtons = document.querySelectorAll('.delete-btn');
+      var taskIDToDelete = null;
+      var rowToDelete = null;
+  
+      deleteButtons.forEach(function(button) {
+          button.addEventListener('click', function() {
+              
+              taskIDToDelete = this.getAttribute('data-task-id');
+              rowToDelete = this.closest('tr');
+              // Show the modal by setting the appropriate Bootstrap classes
+              var deleteModal = document.getElementById('deleteConfirmationModal');
+              deleteModal.classList.add('show');
+              deleteModal.style.display = 'block';
+              document.body.classList.add('modal-open');
+          });
+      });
+  
+      // Handle the delete confirmation
+      document.getElementById('confirmDeleteButton').addEventListener('click', function() {
+          if (taskIDToDelete && rowToDelete) {
+              fetch('/delete_task', {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({ task_id: taskIDToDelete })
+              })
+              .then(response => {
+                  if (!response.ok) {
+                      throw new Error('Network response was not ok');
+                  }
+                  return response.json();
+              })
+              .then(data => {
+                  if (data.success) {
+                      // Remove the row from the table
+                      rowToDelete.remove();
+                  } else {
+                      alert("Failed to delete task: " + (data.error || 'Unknown error'));
+                  }
+              })
+              .catch(error => console.error('Error:', error));
+          }
+  
+          // Hide the modal after the operation
+          var deleteModal = document.getElementById('deleteConfirmationModal');
+          deleteModal.classList.remove('show');
+          deleteModal.style.display = 'none';
+          document.body.classList.remove('modal-open');
+      });
+  
+      // Handle closing the modal with the "Cancel" button or the close button
+      document.querySelectorAll('.btn-close, .btn-secondary').forEach(function(button) {
+          button.addEventListener('click', function() {
+              var deleteModal = document.getElementById('deleteConfirmationModal');
+              deleteModal.classList.remove('show');
+              deleteModal.style.display = 'none';
+              document.body.classList.remove('modal-open');
+          });
+      });
+  });
+  </script>
+  
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+{% endblock %}
+
+
