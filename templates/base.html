@@ -30,6 +30,41 @@
             left: 20px;
             z-index: 1000;
         }
+        .circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            margin: 10px;
+            text-align: center;
+            line-height: 1.2;
+        }
+        .circle.green {
+            background-color: #b1f4bf;
+            border: 2px solid black;
+        }
+        .circle.orange {
+            background-color: orange;
+            border: 2px solid black;
+        }
+        .circle.red {
+            background-color: #ed898d;
+            border: 2px solid black;
+        }
+        .row {
+            display: flex;
+            justify-content: flex-start;
+            margin-bottom: 20px;
+        }
+        .total {
+            font-weight: bold;
+            margin-left: 20px;
+            line-height: 80px;
+        }
     </style>
     
 </head>
@@ -48,13 +83,18 @@
                         <i class="fa-solid fa-plus me-2"></i> Efor gir</a>
 
                     <a href="{{ url_for('show_logs') }}" class="list-group-item list-group-item-action list-group-item-primary mt-2 mb-2">
-                        <i class="fa-solid fa-bars me-2"></i>Eforları Görüntüle</a>
+                        <i class="fa-regular fa-clock me-2"></i>Eforları Görüntüle
+                    </a>
                         
                     <a href="{{ url_for('create_pdas_item')}}" class="list-group-item list-group-item-success list-group-item-action mt-2 mb-2">
                         <i class="fa-solid fa-notes-medical me-2"></i>Pidas Kaydı Ekle</a>
                     
                     <a href="{{ url_for('show_pdas_items') }}" class="list-group-item list-group-item-action list-group-item-primary mt-2 mb-2">
                         <i class="fa-solid fa-eye me-2"></i>PDAS Tasklarını Görüntüle</a>
+                    
+                    <a href="{{ url_for('summary') }}" class="list-group-item list-group-item-action list-group-item-primary mt-2 mb-2">
+                        <i class="fa-solid fa-bars me-2"></i>Özet</a>
+
                     <a href="{{ url_for('export_to_xl') }}" class="list-group-item list-group-item-action list-group-item-warning mt-2 mb-2"><i class="fa-regular fa-share-from-square me-2"></i>Dışa Aktar</a>
                 </div>
             </div>

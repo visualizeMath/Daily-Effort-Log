@@ -287,5 +287,67 @@ def export_to_xl():
         flash(f'Dosya buraya kaydedildi: {output_file}', 'success')
     return redirect(url_for('index'))
 
+def format_date(tarih):
+    date_obj = datetime.strptime(tarih, '%d.%m.%Y')
+    day = date_obj.strftime('%d')
+    month_name = date_obj.strftime('%B')
+    turkish_months = {
+        'January': 'Ocak', 'February': 'Şubat', 'March': 'Mart', 
+        'April': 'Nisan', 'May': 'Mayıs', 'June': 'Haziran', 
+        'July': 'Temmuz', 'August': 'Ağustos', 'September': 'Eylül', 
+        'October': 'Ekim', 'November': 'Kasım', 'December': 'Aralık'
+    }
+    return f"{day} {turkish_months[month_name]}"
+
+# Route to generate the summary report
+@app.route('/summary')
+def summary():
+    # Connect to the SQLite database
+    conn = sqlite3.connect('daily_log.db')
+    cursor = conn.cursor()
+
+    # Fetch sum of harcanan_efor grouped by date (tarih)
+    cursor.execute("""
+        SELECT tarih, SUM(harcanan_efor) as total_efor 
+        FROM daily_log 
+        GROUP BY tarih
+    """)
+    rows = cursor.fetchall()
+    
+    # Filter only weekdays and format dates
+    data = []
+    for row in rows:
+        # print(row)
+        tarih, total_efor = row
+        date_obj = datetime.strptime(tarih, '%d.%m.%Y')
+        if date_obj.weekday() < 5:  # Weekdays only
+            data.append({
+                'tarih': format_date(tarih),
+                'total_efor': total_efor,
+                'color': get_color(total_efor)
+            })
+    
+    conn.close()
+
+    # Group into rows of 5 items per row
+    # rows_of_circles = [data[i:i + 5] for i in range(0, len(data), 5)]
+    rows_of_circles = []
+    for i in range(0, len(data), 5):
+        row_data = data[i:i + 5]
+        row_total = sum(item['total_efor'] for item in row_data)
+        rows_of_circles.append({'circles': row_data, 'row_total': row_total})
+
+    return render_template('summary.html', rows_of_circles=rows_of_circles)
+
+# Determine the color of the circle based on total effort
+def get_color(total_efor):
+    if total_efor == 8:
+        return 'green'
+    elif total_efor > 0 and total_efor<8:
+        return 'red'
+    elif total_efor > 8:
+        return 'orange'
+
+    
 if __name__ == '__main__':
     app.run(debug=True)

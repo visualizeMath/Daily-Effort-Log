@@ -1,11 +1,17 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container d-flex justify-content-center mt-2 mb-3">
+<div class="container d-flex justify-content-center mt-1 mb-2">
     <h2>Girilen Eforlar</h2>
 </div>
-
-
+<div class="container col-md-3 mt-2 mb-2 ms-2">
+    <div class="input-group mb-3">
+        <span class="input-group-text">
+            <i class="fa-solid fa-magnifying-glass"></i>
+        </span>
+        <input type="text" class="form-control" id="searchInput" placeholder="Ara .." aria-label="Search">
+    </div>
+</div>
 
 {% if not logs  %}
 <div class="container d-flex justify-content-center">
@@ -47,7 +53,7 @@
                 <th scope="col-1"></th>
             </tr>
         </thead>
-        <tbody>         
+        <tbody id="logs_body">         
             
             {% for log in logs %}
             
@@ -182,5 +188,16 @@ document.addEventListener('DOMContentLoaded', function() {
       });
   });
   </script>
+  <script>
+    document.getElementById('searchInput').addEventListener('keyup', function() {
+        var searchValue = this.value.toLowerCase();
+        var rows = document.querySelectorAll('#logs_body tr');
+
+        rows.forEach(function(row) {
+            var text = row.textContent.toLowerCase();
+            row.style.display = text.includes(searchValue) ? '' : 'none';
+        });
+    });
+</script>
   <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script> -->
 {% endblock %}

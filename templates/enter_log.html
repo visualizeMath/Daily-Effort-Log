@@ -30,7 +30,7 @@
     
             <div class="mb-3 col-3">
                 <label for="harcanan_efor" class="form-label">Efor</label>
-                <input type="number" step="1" class="form-control" value="8" id="harcanan_efor" name="harcanan_efor" required>
+                <input type="number" step="1" class="form-control" value="8" id="harcanan_efor" name="harcanan_efor" required min="1" max="12">
             </div>
     
         </div>
@@ -165,7 +165,7 @@
         selectedTaskID.addEventListener('change', function() {
             var selected_task_id = selectedTaskID.value;
             
-            console.log('Selected task id:', selected_task_id); // Debugging
+            // console.log('Selected task id:', selected_task_id); // Debugging
             
             // Create the POST request
             fetch('/get_selectedtaskname', {
@@ -189,8 +189,9 @@
                 var yapilanIs = document.getElementById('yapilan_is');//ibod
                 yapilanIs.innerHTML = ''; // Clear
 
+                // var task_acklm= document.getElementById('task_aciklama')
                 taskSelect.value=data;
-                yapilanIs.value="PDAS-"+ selected_task_id+": ";
+                yapilanIs.value="PDAS-"+ selected_task_id+": "+data;
 
             })
             .catch(error => console.error('Error fetching task IDs:', error));
