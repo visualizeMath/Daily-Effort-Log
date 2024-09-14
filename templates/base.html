@@ -10,8 +10,7 @@
     <style>
         body.dark-mode {
             background-color: #121212;
-            color: #ffffff;
-            
+            color: #ffffff;            
         }
         .list-group-item.dark-mode {
             background-color: #333333;
@@ -95,6 +94,22 @@
 </head>
 <body>
   
+    <div class="container d-flex justify-content-center col-4 mb-3 mt-4">
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} fade show fs-6 fw-bold" role="alert">
+                        {{ message }}
+                        <!-- <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"> -->
+                            
+                        </button>
+                    </div>
+                    
+                {% endfor %}
+            {% endif %}
+        {% endwith %}    
+    </div>
     <div class="container mt-5 ms-2">
         <div class="row">
             <div class="col-2 rounded">
@@ -130,28 +145,16 @@
                 </div>
             </div>
             <div class="col-9">
-                {% block content %}{% endblock %}
+                {% block content %}
+                
+                  
+                {% endblock %}
             </div>
         </div>
        
     </div>
    
-    <div class="container d-flex justify-content-center col-4 mb-3">
-        <!-- Flash Messages -->
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                    <div class="alert alert-{{ category }} fade show fs-6 fw-bold" role="alert">
-                        {{ message }}
-                        <!-- <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
-                            
-                        </button> -->
-                    </div>
-                    
-                {% endfor %}
-            {% endif %}
-        {% endwith %}    
-    </div>
+  
 
     <div class="container d-flex justify-content-center col-4 mt-auto">
         <!-- <img src="../static/img/turkish.png" class="" style="width: 25px; height: auto;" > -->
@@ -223,7 +226,7 @@
                     }
                  }    
                                           
-
+                 location.reload();
         }
     
         // Apply dark mode if it was enabled previously
@@ -313,6 +316,7 @@
     
         // Apply dark mode on page load
         applyDarkMode();
+        
     </script>
     <script>
       var alertList = document.querySelectorAll('.alert')
