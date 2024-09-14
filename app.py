@@ -50,15 +50,11 @@ def index():
 
 @app.route('/enter_log')
 def enter_log():
-    # conn = sqlite3.connect('daily_log.db')
-    # c = conn.cursor()
-    # c.execute('SELECT pdas_task_id FROM pdas')
-    # task_ids = c.fetchall()  # Fetch all task IDs
-    # conn.close()
-
-    # Pass the task_ids to the template
-    # return render_template('enter_log.html', task_ids=[task_id[0] for task_id in task_ids])
-    return render_template('enter_log.html', task_ids=[])
+  
+    active_sprints=get_sprints_with_active_tasks()
+    print(type(active_sprints))
+    print(active_sprints[0])
+    return render_template('enter_log.html', task_ids=[],active_sprints=active_sprints)
 @app.route('/get_dependent_tasks',methods=['POST'])
 def get_dependent_tasks():
     try:
@@ -405,6 +401,17 @@ def getword2practice():
     selected_word=cursor.fetchall()
     conn.close()
     return selected_word
+
+def get_sprints_with_active_tasks():
+    conn= sqlite3.connect('daily_log.db')
+    cursor =conn.cursor()
+
+    cursor.execute('select distinct bagli_sprint from pdas')
+    available_sprints= cursor.fetchall()
+    conn.close()
+
+    return available_sprints
+
 if __name__ == '__main__':
     # insert_vocab('templates/words.txt')
     app.run(debug=True)

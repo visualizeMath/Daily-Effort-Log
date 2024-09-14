@@ -2,7 +2,7 @@
 
 {% block content %}
 <div class="container d-flex justify-content-center mt-2 mb-3">
-    <h3>PDAS kayıtları</h3>
+    <h3>Task kayıtları</h3>
 </div>
 <div class="container col-md-3 mt-2 mb-2 ms-5">
     <div class="input-group mb-3">
@@ -22,15 +22,15 @@
                         bagli_sprint TEXT -->
             <tr class="satir">
                 <!-- <th scope="col">ID</th> -->
-                <th scope="col-2">PDAS Task ID</th>
-                <th scope="col-4">Task Açıklaması</th>
+                <th scope="col-1">Task ID</th>
+                <th scope="col-6">Task Açıklaması</th>
                 <th scope="col">Sprint</th>
                 <!-- <th scope="col-1 ms-1 px-1"></th>            -->
             </tr>
         </thead>
         <tbody>
             <tr class="satir">
-                <td class="col fs4 fst-italic">PDAS kaydı bulunamadı!</td>   
+                <td class="col fs4 fst-italic">Task kaydı bulunamadı!</td>   
             </tr>
         </tbody>
     </table>
@@ -38,15 +38,11 @@
     <table class="table table-striped">
     
         <thead>
-            <!-- pdas_task_id TEXT,
-                        pdas_task_aciklama TEXT,
-                        bagli_sprint TEXT -->
             <tr class="satir">
                 <!-- <th scope="col">ID</th> -->
-                <th scope="col-2">PDAS Task ID</th>
-                <th scope="col-4">Task Açıklaması</th>
+                <th scope="col-1">Task ID</th>
+                <th scope="col-6">Task Açıklaması</th>
                 <th scope="col">Sprint</th>
-                <!-- <th scope="col-1 ms-1 px-1"></th>            -->
             </tr>
         </thead>
 
@@ -54,10 +50,10 @@
         {% for log in logs %}
         <tr class="satir">
             <!-- <td>{{ log[0] }}</td> -->
-            <td class="col-2">{{ log[1] }}</td>
-            <td class="col-4">{{ log[2] }}</td>
+            <td class="col-1">{{ log[1] }}</td>
+            <td class="col-6">{{ log[2] }}</td>
             <td class="col d-flex align-items-center">{{ log[3] }}
-                <button type="button" class="btn btn-danger btn-xs delete-btn ms-5" data-task-id="{{ log[1] }}">
+                <button type="button" class="btn p-0 border-0 btn-md delete-btn ms-5" data-task-id="{{ log[1] }}" style="color:red">
                     <i class="fa-solid fa-trash"></i>
                 </button>
             </td>
@@ -75,7 +71,7 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          Seçilen PDAS taskı silinecek. Emin misiniz?
+          Seçilen task kaydı silinecek. Emin misiniz?
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>

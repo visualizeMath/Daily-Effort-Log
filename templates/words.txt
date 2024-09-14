@@ -40,3 +40,23 @@ carpooling; araç/yolculuk paylaşımı
 congestion;sıkışıklık,izdiham
 sound the horn;korna çalmak
 courteous;nazik, kibar
+purge;temizleme, tasfiye etmek
+conscription;zorunlu askerlik
+advocacy;savunma, taraftarlık
+by descent;soydan gelen
+incite; kışkırtmak, teşvik etmek
+phlegmatic; soğukkanlı, sakin
+confiscate; kanunen el koymak, kamulaştırmak
+bewildering; hayret verici
+prominence;önem, öne çıkma
+napalm; bomba yapımında da kullanılan alüminyum içeren kimyasal
+amenity;olanak, tesis
+landlord; ev sahibi
+renter; kiracı
+multi-story; çok katlı
+miscellaneous; muhtelif, çeşitli
+climb the corporate ladder;iyi mevkilere gelmek, kariyer basamaklarını tırmanmak
+payroll;maaş bordrosu
+expulsion;sınır dışı etme, uzaklaştırma
+a fixer-upper;tadilat-onarım gerektiren gayrimenkul ya da tadilatçı kimse
+Equations are more important to me, because politics is for the present but an equation is something for eternity;Gleichungen sind mir wichtiger, denn Politik ist für die Gegenwart, aber eine Gleichung ist etwas für die Ewigkeit.
