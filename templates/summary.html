@@ -8,6 +8,15 @@
     <div class="container d-flex justify-content-center mt-2 mb-4">
         <h1>Haftalık Efor Özeti</h1>
     </div>
+    <div class="d-flex align-items-center mb-1">
+        <div class="circle green" style="transform: scale(0.2); margin-right: 2px;"></div>
+        <p class="mb-0">Tam efor</p>
+        <div class="circle red" style="transform: scale(0.2); margin-right: 2px;"></div>
+        <p class="mb-0">Eksik efor</p>
+        <div class="circle orange" style="transform: scale(0.2); margin-right: 2px;"></div>
+        <p class="mb-0">Fazla efor</p>
+
+    </div>
 
     {% for row in rows_of_circles %}
     <div class="d-flex align-items-center ms-4 mt-3 pb-3"  style="border-bottom: 1px solid #ccc;">
@@ -47,15 +56,7 @@
             <!-- <p>word</p> -->
         {% endif %}
     </div>
-    <div class="d-flex align-items-center mb-1">
-        <div class="circle green" style="transform: scale(0.2); margin-right: 2px;"></div>
-        <p class="mb-0">Tam efor</p>
-        <div class="circle red" style="transform: scale(0.2); margin-right: 2px;"></div>
-        <p class="mb-0">Eksik efor</p>
-        <div class="circle orange" style="transform: scale(0.2); margin-right: 2px;"></div>
-        <p class="mb-0">Fazla efor</p>
-
-    </div>
+  
     <!-- <div class="d-flex align-items-center mb-1">
         
     </div>

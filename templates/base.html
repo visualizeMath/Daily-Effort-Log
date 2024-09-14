@@ -24,13 +24,7 @@
             background-color: #444444;
         }
 
-         /* Positioning for the dark mode toggle button */
-         #dark-mode-toggle {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            z-index: 1000;
-        }
+       
         .circle {
             width: 80px;
             height: 80px;
@@ -74,7 +68,9 @@
         background-repeat: no-repeat;
         background-attachment: fixed; 
         /* position: relative; */
-        margin: 0;       
+        margin: 0;  
+      
+            
     }
     body::before {
     content: ""; /* Required for pseudo-element */
@@ -125,16 +121,21 @@
                         <i class="fa-solid fa-bars me-2"></i>Özet</a>
 
                     <a href="{{ url_for('export_to_xl') }}" class="list-group-item list-group-item-action list-group-item-warning mt-2 mb-2 rounded-pill"><i class="fa-regular fa-share-from-square me-2"></i>Dışa Aktar</a>
+                   
+                </div>
+                <div class="container ms-2 mb-3 mt-5">
+                    <button id="dark-mode-toggle" class="btn btn-secondary">
+                        <i class="fas fa-moon"></i>
+                    </button>
                 </div>
             </div>
             <div class="col-9">
                 {% block content %}{% endblock %}
             </div>
         </div>
+       
     </div>
-    <button id="dark-mode-toggle" class="btn btn-secondary">
-<i class="fas fa-moon"></i>
-    </button>
+   
     <div class="container d-flex justify-content-center col-4 mb-3">
         <!-- Flash Messages -->
         {% with messages = get_flashed_messages(with_categories=true) %}
@@ -169,14 +170,7 @@
             var home_icon = document.getElementById('main-home-icon');
 
             home_icon.classList.toggle('dark-mode');
-            // if(home_icon.classList.style.color==="beige")
-            // {
-            //     home_icon.style.color="#333333";
-            // }
-            // else{
-            //     home_icon.style.color="beige";
-            // }
-
+            
             for (var i = 0; i < modal_cnt.length; i++) {
                 modal_cnt[i].classList.toggle('dark-mode');
             }
@@ -235,7 +229,6 @@
         // Apply dark mode if it was enabled previously
         function applyDarkMode() {
            
-
             if (localStorage.getItem('darkMode') === 'enabled') {
                 document.body.classList.add('dark-mode');
                 document.body.style.backgroundImage="url('/static/img/bg-dark.png')";
@@ -243,6 +236,14 @@
                 home_icon.style.color="beige";
                 var listItems = document.getElementsByClassName('list-group-item');
                 
+                var circles = document.getElementsByClassName('circle');
+                for(var i =0;i< circles.length;i++)
+                {
+
+                    circles[i].classList.remove('text-white');
+                    circles[i].classList.add('text-dark');
+                }
+
                 for (var i = 0; i < listItems.length; i++) {
                     listItems[i].classList.add('dark-mode');
                 }
@@ -272,7 +273,7 @@
                 for (var j = 0; j < tableRows.length; j++) {
                     tableRows[j].classList.add('dark-mode');
                 }
-            } else
+            } else // when dark-mode is disabled
             {
                 document.body.style.backgroundImage = "url('/static/img/bg.png')";
                 var home_icon=document.getElementById('main-home-icon');
@@ -282,6 +283,13 @@
                 for (var i = 0; i < lstelemanlari.length; i++) {
                         lstelemanlari[i].classList.remove('dark-mode');
                 }
+
+                var circles = document.getElementsByClassName('circle');
+                for(var i =0;i< circles.length;i++)
+                {
+                    circles[i].classList.remove('text-dark');
+                }
+
                 // Select the table element
                 var table = document.querySelector('table');
 
@@ -297,9 +305,7 @@
                     modal_body[i].classList.remove('text-white');
                 }
 
-            }
-            
-
+            }                        
         }
     
         // Event listener for dark mode toggle button
