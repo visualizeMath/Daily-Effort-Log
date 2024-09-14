@@ -3,6 +3,7 @@ from flask import Flask, flash, jsonify, render_template, request, redirect, url
 import sqlite3
 import secrets
 import pandas as pd
+import random
 
 app = Flask(__name__)
 
@@ -27,6 +28,14 @@ def init_db():
                     pdas_task_aciklama TEXT,
                     bagli_sprint TEXT
                 )''')
+    
+    c.execute('''CREATE TABLE IF NOT EXISTS dictionary (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    word_en TEXT,
+                    word_tr TEXT,
+                    word_de TEXT
+                )''')
+    
     conn.commit()
     conn.close()
 
@@ -135,6 +144,35 @@ def submit_log():
         flash(f'Kayıt oluşturulurken hata oluştu.', 'danger')
     flash(f'{formatted_tarih}- {gun} - {task_aciklama} icin efor kaydı girildi.', 'success')
     return redirect(url_for('index'))
+
+def insert_vocab(file_path):
+    conn=sqlite3.connect('daily_log.db')
+    cursor=conn.cursor()
+    print('insert_vocab called')
+
+    with open(file_path, 'r', encoding='utf-8') as file:
+        print('inside file reading')
+        for line in file:
+            word_en, word_tr = line.strip().split(';')
+            cursor.execute('SELECT id FROM dictionary where word_en= ?',(word_en,))            
+            row=cursor.fetchone()
+            # print('Query returned: '+row)
+            if row:
+                print('Will be updated')
+                #There's already a record for the word
+                cursor.execute('UPDATE dictionary set word_tr= ? , word_de = ? where word_en= ?',(word_tr,None, word_en))
+            else:
+                print('Will be inserted')
+                #The word doesn't exist. insert the word
+                cursor.execute('INSERT INTO dictionary (word_en, word_tr, word_de) VALUES (?, ?, ?)', (word_en, word_tr, None))
+
+    # Commit the transaction and close the connection
+    conn.commit()
+    conn.close()
+
+# Example usage:
+# insert_words_from_file('path_to_your_file.txt')
+
 
 @app.route('/submit_pdas_task', methods=['POST'])
 def submit_pdas_task():
@@ -337,7 +375,9 @@ def summary():
         row_total = sum(item['total_efor'] for item in row_data)
         rows_of_circles.append({'circles': row_data, 'row_total': row_total})
 
-    return render_template('summary.html', rows_of_circles=rows_of_circles)
+    word2practice=getword2practice()
+    # print(str(word2practice))
+    return render_template('summary.html', rows_of_circles=rows_of_circles,word2practice=word2practice)
 
 # Determine the color of the circle based on total effort
 def get_color(total_efor):
@@ -348,6 +388,21 @@ def get_color(total_efor):
     elif total_efor > 8:
         return 'orange'
 
-    
+def getword2practice():
+    conn = sqlite3.connect('daily_log.db')
+    cursor = conn.cursor()
+
+    cursor.execute('SELECT count(*) from dictionary')
+    word_count=cursor.fetchone()
+    # print('WordCount: '+str(word_count))
+
+    x=random.randint(1,word_count[0])
+    cursor.execute(f'SELECT word_en,word_tr from dictionary where id={x}')
+   
+    selected_word=cursor.fetchall()
+
+    return selected_word
 if __name__ == '__main__':
+    # insert_vocab('templates/words.txt')
     app.run(debug=True)
+    
