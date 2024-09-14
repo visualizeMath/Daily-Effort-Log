@@ -72,30 +72,30 @@
   
     <div class="container mt-5 ms-2">
         <div class="row">
-            <div class="col-2">
+            <div class="col-2 rounded">
                  <!-- Example of a Font Awesome icon -->
                 <div class="mt-2 mb-2"></div>
-                <div class="list-group list-group-flush">
+                <div class="list-group list-group-flush rounded">
                     <div class="container d-flex justify-content-center">
                         <a href="{{ url_for('index') }}" class="mt-2 mb-2"><i class="fas fa-home"></i></a>
                     </div>
-                    <a href="{{ url_for('enter_log') }}" class="list-group-item list-group-item-success list-group-item-action mt-2 mb-2">
+                    <a href="{{ url_for('enter_log') }}" class="list-group-item list-group-item-success list-group-item-action mt-2 mb-2 rounded-pill">
                         <i class="fa-solid fa-plus me-2"></i> Efor gir</a>
 
-                    <a href="{{ url_for('show_logs') }}" class="list-group-item list-group-item-action list-group-item-primary mt-2 mb-2">
+                    <a href="{{ url_for('show_logs') }}" class="list-group-item list-group-item-action list-group-item-primary mt-2 mb-2 rounded-pill">
                         <i class="fa-regular fa-clock me-2"></i>Eforları Görüntüle
                     </a>
                         
-                    <a href="{{ url_for('create_pdas_item')}}" class="list-group-item list-group-item-success list-group-item-action mt-2 mb-2">
+                    <a href="{{ url_for('create_pdas_item')}}" class="list-group-item list-group-item-success list-group-item-action mt-2 mb-2 rounded-pill">
                         <i class="fa-solid fa-notes-medical me-2"></i>Pidas Kaydı Ekle</a>
                     
-                    <a href="{{ url_for('show_pdas_items') }}" class="list-group-item list-group-item-action list-group-item-primary mt-2 mb-2">
-                        <i class="fa-solid fa-eye me-2"></i>PDAS Tasklarını Görüntüle</a>
+                    <a href="{{ url_for('show_pdas_items') }}" class="list-group-item list-group-item-action list-group-item-primary mt-2 mb-2 rounded-pill">
+                        <i class="fa-solid fa-eye me-2"></i>Taskları Görüntüle</a>
                     
-                    <a href="{{ url_for('summary') }}" class="list-group-item list-group-item-action list-group-item-primary mt-2 mb-2">
+                    <a href="{{ url_for('summary') }}" class="list-group-item list-group-item-action list-group-item-primary mt-2 mb-2 rounded-pill">
                         <i class="fa-solid fa-bars me-2"></i>Özet</a>
 
-                    <a href="{{ url_for('export_to_xl') }}" class="list-group-item list-group-item-action list-group-item-warning mt-2 mb-2"><i class="fa-regular fa-share-from-square me-2"></i>Dışa Aktar</a>
+                    <a href="{{ url_for('export_to_xl') }}" class="list-group-item list-group-item-action list-group-item-warning mt-2 mb-2 rounded-pill"><i class="fa-regular fa-share-from-square me-2"></i>Dışa Aktar</a>
                 </div>
             </div>
             <div class="col-9">

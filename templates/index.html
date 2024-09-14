@@ -4,4 +4,37 @@
 <h2 class="mt-3">Günlük Efor Kayıt Programı</h2>
 <hr>
 <p class="fs-6">Kayıt girmek ya da kayıtları görüntülemek için soldaki menüyü kullanın.</p>
+
+
+<div class="d-flex justify-content-center align-items-center min-vh-100">
+    {% if word2practice %}
+         <!-- <p>{{ word2practice[0] }}</p> -->
+    {% for word in word2practice %}
+
+        <div class="row me-2 ms-2">
+            <button class="btn p-0 border-0" onclick="seslendir('{{ word[0] }}')">
+                <img src="../static/img/english.png" class="" style="width: 25px; height: auto;" >
+            </button>
+        </div>
+
+        <div class="row ms-2">
+            <p class="mb-2 me-2 ms-2 font-monospace fs-5 fw-bold">{{word[0]}} :</p>
+        </div>              
+        <div class="row">
+            <p class="mb-2 me-2 ms-2 font-monospace fs-5 fst-italic">{{word[1]}}</p>
+        </div>
+           
+      
+    {% endfor %}
+    
+    {% endif %}
+    
+</div>
+<script>
+    function seslendir(word) {
+        const utterance = new SpeechSynthesisUtterance(word);
+        utterance.lang = 'en-US';
+        window.speechSynthesis.speak(utterance);
+    }
+</script>
 {% endblock %}

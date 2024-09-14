@@ -43,7 +43,10 @@ init_db()
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    word2practice=getword2practice()
+    # print('Cagrildi:'+str(word2practice[0][0]))
+    # print('Cagrildi:'+str(word2practice[0][1]))
+    return render_template('index.html',word2practice=word2practice)
 
 @app.route('/enter_log')
 def enter_log():
@@ -400,7 +403,7 @@ def getword2practice():
     cursor.execute(f'SELECT word_en,word_tr from dictionary where id={x}')
    
     selected_word=cursor.fetchall()
-
+    conn.close()
     return selected_word
 if __name__ == '__main__':
     # insert_vocab('templates/words.txt')

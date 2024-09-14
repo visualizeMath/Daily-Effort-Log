@@ -30,21 +30,19 @@
         {% if word2practice %}
 
         {% for word in word2practice %}
-        
-     
-        
-        <div class="me-2 ms-2">
-            <img src="../static/img/english.png" class="" style="width: 25px; height: auto;" >
-        </div>
-        <div class="row">
-            <p class="mb-2 me-2 ms-2">{{word[0]}}</p>
-        </div>    
-        <div class="ms-2 me-2">
-            <img src="../static/img/turkish.png" class="" style="width: 25px; height: auto;" >
-        </div>
-        <div class="row">
-            <p class="mb-2 me-2 ms-2">{{word[1]}}</p>
-        </div>
+
+            <div class="row me-2 ms-2">
+                <button class="btn p-0 border-0" onclick="seslendir(' {{word[0]}}')">
+                    <img src="../static/img/english.png" class="" style="width: 25px; height: auto;" >
+                </button>
+            </div>
+            <div class="row">
+                <p class="mb-2 me-2 ms-2 font-monospace fs-5 fw-bold">{{word[0]}} :</p>
+            </div>    
+            
+            <div class="row">
+                <p class="mb-2 me-2 ms-2 font-monospace fs-5 fst-italic">{{word[1]}}</p>
+            </div>
         {% endfor %}
             <!-- <p>word</p> -->
         {% endif %}
@@ -65,4 +63,12 @@
        
     </div> -->
 </div>
+
+<script>
+    function seslendir(word){
+        const utr = new SpeechSynthesisUtterance(word);
+        utr.lang='en-US';
+        window.speechSynthesis.speak(utr);
+    }
+</script>
 {% endblock %}
