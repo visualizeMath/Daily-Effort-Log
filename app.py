@@ -4,6 +4,8 @@ import sqlite3
 import secrets
 import pandas as pd
 import random
+import os
+from pathlib import Path
 
 app = Flask(__name__)
 
@@ -245,6 +247,14 @@ def delete_task():
 
     return jsonify({'success': False, 'message': 'No entry found'}), 404
 
+#Find the downloads folder path depending on the os of the user
+# This path will be used to export the records
+def get_downloads_folder():
+    if os.name == 'nt':  # Windows
+        return Path(os.getenv('USERPROFILE')) / 'Downloads'
+    else:  # macOS and Linux
+        return Path.home() / 'Downloads'
+    
 #Delete the selected log record from db  
 @app.route('/delete_log', methods=['POST'])
 def delete_log():
@@ -290,7 +300,11 @@ def delete_log():
         return jsonify({"success": False, "error": str(e)}), 500
         # return redirect(url_for('show_logs'))
 
-@app.route('/export_to_xl', methods=['GET'])
+@app.route('/export',methods=['GET'])
+def export():
+    return render_template('export.html')
+
+@app.route('/export_to_xl', methods=['GET','POST'])
 def export_to_xl():
     # print('ok')
     # Define the path to your SQLite database
@@ -298,7 +312,10 @@ def export_to_xl():
 
     # Define the output file path with the current timestamp
     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-    output_file = f'C:/Users/odaci/Downloads/dailyEffortLog/daily_log_export_{timestamp}.xlsx'
+    
+    downloads_folder=get_downloads_folder()
+
+    output_file = f'{downloads_folder}/daily_log_export_{timestamp}.xlsx'
 
     # Connect to the SQLite database
     conn = sqlite3.connect(db_path)

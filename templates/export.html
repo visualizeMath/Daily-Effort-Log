@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<hr>
+<div class="container d-flex justify-content-center mt-4">
+    <p class="fs-5 fst-italic">Çıktı dosyası, indirilenler klasörüne daily_log_export adında indirilir</p>
+</div>
+
+<div class="container mt-3"></div>
+<form method="POST" action="/export_to_xl">
+    <div class="container d-flex justify-content-center">
+        <button type="submit" class="btn btn-primary">Dışa aktar</button>
+    </div>
+        </form>
+</div>
+
+<div class="container-fluid align-items-start mt-5">
+    <div class="d-flex justify-content-start">
+        {% if word2practice %}
+             <!-- <p>{{ word2practice[0] }}</p> -->
+        {% for word in word2practice %}
+    
+            <div class="row me-2 ms-2">
+                <button class="btn p-0 border-0" onclick="seslendir('{{ word[0] }}')">
+                    <img src="../static/img/english.png" class="" style="width: 25px; height: auto;" >
+                </button>
+            </div>
+    
+            <div class="row ms-2">
+                <p class="mb-2 me-2 ms-2 font-monospace fs-5 fw-bold">{{word[0]}} :</p>
+            </div>
+            <div class="row">
+                <p class="mb-2 me-2 ms-2 font-monospace fs-5 fst-italic">{{word[1]}}</p>
+            </div>
+    
+    
+        {% endfor %}
+    
+        {% endif %}
+    
+    </div>
+</div>
+<script>
+    function seslendir(word) {
+        const utterance = new SpeechSynthesisUtterance(word);
+        utterance.lang = 'en-US';
+        window.speechSynthesis.speak(utterance);
+    }
+</script>
+{% endblock %}

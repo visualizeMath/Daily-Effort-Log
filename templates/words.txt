@@ -60,3 +60,6 @@ payroll;maaş bordrosu
 expulsion;sınır dışı etme, uzaklaştırma
 a fixer-upper;tadilat-onarım gerektiren gayrimenkul ya da tadilatçı kimse
 Equations are more important to me, because politics is for the present but an equation is something for eternity;Gleichungen sind mir wichtiger, denn Politik ist für die Gegenwart, aber eine Gleichung ist etwas für die Ewigkeit.
+Easier said than done;Söylemesi kolay
+ambidextrous;iki elini de kullanabilen
+deceitful;aldatıcı
