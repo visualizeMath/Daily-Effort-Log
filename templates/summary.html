@@ -6,7 +6,7 @@
 
 <div class="container">
     <div class="container d-flex justify-content-center mt-2 mb-4">
-        <h1>Haftalık Efor Özeti</h1>
+        <h3>Haftalık Efor Özeti</h3>
     </div>
 
     <!-- <div class="container mb-1 mt-5">
@@ -54,8 +54,20 @@
     <div class="d-flex align-items-center ms-4 mt-3 pb-3"  style="border-bottom: 1px solid #ccc;">
     <div class="d-flex flex-wrap" style="flex-grow: 1;">
             {% for item in row.circles %}
-                <div class="circle {{ item.color }} me-3 mb-3">
+                <div class="circle {{ item.color }} me-3 mb-3" data-tarih="{{ item.tarih }}">
                     <div>{{ item.tarih }}<br><br>{{ item.total_efor }}</div>
+                </div>
+                <div id="detailforday-{{ item.tarih }}" class="detailforday rounded mb-0" style="display: none;">
+                   {% for e in item.related_efforts  %}
+                        <div class="d-flex align-items-start ms-2 me-2 mt-3 pb-0">
+                            
+                                <p class="fw-bolder mb-0">{{e[5]}}</p>
+                                <p class="fw-normal ms-4 mb-0">{{e[1]}} : {{e[2]}}</p>
+                        </div>
+                        <hr class="mb-0">
+                       
+                        
+                   {%  endfor %}
                 </div>
             {% endfor %}
             <hr>
@@ -75,4 +87,34 @@
         window.speechSynthesis.speak(utr);
     }
 </script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Select all circle elements
+        const circles = document.querySelectorAll('.circle');
+
+        // Add event listeners for hover
+        circles.forEach(circle => {
+            circle.addEventListener('mouseenter', function() {
+                // Get the related date (tarih)
+                const tarih = this.getAttribute('data-tarih');
+                // Find the related detail div and display it
+                const detailDiv = document.getElementById('detailforday-' + tarih);
+                if (detailDiv) {
+                    detailDiv.style.display = 'block';
+                }
+            });
+
+            circle.addEventListener('mouseleave', function() {
+                // Get the related date (tarih)
+                const tarih = this.getAttribute('data-tarih');
+                // Find the related detail div and hide it
+                const detailDiv = document.getElementById('detailforday-' + tarih);
+                if (detailDiv) {
+                    detailDiv.style.display = 'none';
+                }
+            });
+        });
+    });
+</script>
+
 {% endblock %}

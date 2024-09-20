@@ -54,8 +54,8 @@ def index():
 def enter_log():
   
     active_sprints=get_sprints_with_active_tasks()
-    print(type(active_sprints))
-    print(active_sprints[0])
+    # print(type(active_sprints))
+    # print(active_sprints[0])
     return render_template('enter_log.html', task_ids=[],active_sprints=active_sprints)
 @app.route('/get_dependent_tasks',methods=['POST'])
 def get_dependent_tasks():
@@ -368,17 +368,20 @@ def summary():
     """)
     rows = cursor.fetchall()
     
+    related_efforts_of_day=[]
     # Filter only weekdays and format dates
     data = []
     for row in rows:
         # print(row)
         tarih, total_efor = row
+        get_tasks_of_day(tarih)
         date_obj = datetime.strptime(tarih, '%d.%m.%Y')
         if date_obj.weekday() < 5:  # Weekdays only
             data.append({
                 'tarih': format_date(tarih),
                 'total_efor': total_efor,
-                'color': get_color(total_efor)
+                'color': get_color(total_efor),
+                'related_efforts': get_tasks_of_day(tarih)
             })
     
     conn.close()
@@ -404,6 +407,20 @@ def get_color(total_efor):
     elif total_efor > 8:
         return 'orange'
 
+def get_tasks_of_day(given_date):
+    conn=sqlite3.connect('daily_log.db')
+    cursor=conn.cursor()
+    # print(given_date)
+    cursor.execute("select * from daily_log where tarih = ?",(given_date,))
+    tasks_of_day= cursor.fetchall()
+
+    # for task in tasks_of_day:
+    #     print(f'{task[0]}{task[1]}{task[2]}')
+
+    conn.close()
+
+    return tasks_of_day
+
 def getword2practice():
     conn = sqlite3.connect('daily_log.db')
     cursor = conn.cursor()
@@ -423,7 +440,7 @@ def get_sprints_with_active_tasks():
     conn= sqlite3.connect('daily_log.db')
     cursor =conn.cursor()
 
-    cursor.execute('select distinct bagli_sprint from pdas')
+    cursor.execute('select max( distinct bagli_sprint) from pdas')
     available_sprints= cursor.fetchall()
     conn.close()
 
