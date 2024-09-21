@@ -54,14 +54,19 @@
     <div class="d-flex align-items-center ms-4 mt-3 pb-3"  style="border-bottom: 1px solid #ccc;">
     <div class="d-flex flex-wrap" style="flex-grow: 1;">
             {% for item in row.circles %}
-            <div id="detailforday-{{ item.tarih }}" class="detailforday rounded mb-0 mt-4 ms-2" style="display: none;">
+            <div id="detailforday-{{ item.tarih }}" class="detailforday rounded mb-0 mt-0 ms-2 me-2" style="display: none;">
                 {% for e in item.related_efforts  %}
-                     <div class="d-flex align-items-start ms-2 me-2 mt-3 pb-0">
+                     <div class="d-flex ms-2 me-2 mt-3 pb-0 px-1">
                          
-                             <p class="fw-bolder mb-0">{{e[5]}}</p>
-                             <p class="fw-normal ms-4 mb-0">{{e[1]}} : {{e[2]}}</p>
-                     </div>
-                     <hr class="mb-0">
+                            <p class="fw-bolder mb-1">
+                                    <span class="badge bg-primary rounded-pill fs-7">
+                                    {{e[5]}}</span></p>
+                             <p class="fw-bold font-monospace fs-6 ms-4 mb-2">{{e[1]}} : {{e[2]}}</p>
+                            </div>
+                            <p class="fw-normal font-monospace fs-6 ms-3 mb-1 pb-1 me-1">{{ e[6] }}</p>
+                            {% if not loop.last %}
+                                <hr class="mb-1 mt-1">
+                            {% endif %}
                     
                 {%  endfor %}
              </div>
