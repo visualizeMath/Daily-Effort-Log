@@ -429,13 +429,16 @@ def getword2practice():
     cursor.execute('SELECT count(*) from dictionary')
     word_count=cursor.fetchone()
     # print('WordCount: '+str(word_count))
-
-    x=random.randint(1,word_count[0])
-    cursor.execute(f'SELECT word_en,word_tr from dictionary where id={x}')
-   
-    selected_word=cursor.fetchall()
-    conn.close()
-    return selected_word
+    if word_count[0]>0:
+        x=random.randint(1,word_count[0])
+        cursor.execute(f'SELECT word_en,word_tr from dictionary where id={x}')
+    
+        selected_word=cursor.fetchall()
+        conn.close()
+        return selected_word
+    else:
+        conn.close()
+        return None
 
 def get_sprints_with_active_tasks():
     conn= sqlite3.connect('daily_log.db')
