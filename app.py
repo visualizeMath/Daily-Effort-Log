@@ -200,7 +200,8 @@ def submit_pdas_task():
 def show_logs():
     conn = sqlite3.connect('daily_log.db')
     c = conn.cursor()
-    c.execute('SELECT * FROM daily_log')
+    # c.execute('SELECT * FROM daily_log order by tarih desc')
+    c.execute('SELECT * FROM daily_log ORDER BY id DESC')
     logs = c.fetchall()
     conn.close()
     return render_template('show_logs.html', logs=logs)
@@ -209,7 +210,7 @@ def show_logs():
 def show_pdas_items():
     conn = sqlite3.connect('daily_log.db')
     c = conn.cursor()
-    c.execute('SELECT * FROM pdas')
+    c.execute('SELECT * FROM pdas order by id desc')
     pdas_logs = c.fetchall()
     conn.close()
     return render_template('show_pdas.html', logs=pdas_logs)
