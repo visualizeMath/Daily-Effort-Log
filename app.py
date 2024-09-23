@@ -196,15 +196,75 @@ def submit_pdas_task():
     return redirect(url_for('index'))
 
 
-@app.route('/show_logs')
+@app.route('/show_logs',methods=['GET','POST'])
 def show_logs():
+
+    selected_month=get_current_month_name()
     conn = sqlite3.connect('daily_log.db')
     c = conn.cursor()
-    # c.execute('SELECT * FROM daily_log order by tarih desc')
-    c.execute('SELECT * FROM daily_log ORDER BY id DESC')
+
+    if request.method=='GET':
+        c.execute('SELECT * FROM daily_log ORDER BY id DESC')
+
+    elif request.method=='POST':
+
+        selected_month= request.form.get('filter_month')
+
+        if (selected_month!='' and selected_month and selected_month!='Select'):
+            
+            month_number = turkish_month_map.get(selected_month)
+            # print('2.month_number : '+ month_number)
+            # query = "SELECT * FROM daily_log WHERE Tarih LIKE ? Order by id desc"
+            # c.execute(query, ('%.{}.%'.format(month_value),))
+            query = "SELECT * FROM daily_log WHERE tarih like ? ORDER BY id DESC"
+            c.execute(query, ('%.{}.%'.format(month_number),))
+
+        elif selected_month=='Select' :
+            c.execute('SELECT * FROM daily_log ORDER BY id DESC')
+
     logs = c.fetchall()
+    # c.execute('SELECT * FROM daily_log order by tarih desc')
+  
     conn.close()
-    return render_template('show_logs.html', logs=logs)
+    return render_template('show_logs.html', logs=logs,selected_month=selected_month)
+
+turkish_month_map = {
+    "Ocak": "01",
+    "Şubat": "02",
+    "Mart": "03",
+    "Nisan": "04",
+    "Mayıs": "05",
+    "Haziran": "06",
+    "Temmuz": "07",
+    "Ağustos": "08",
+    "Eylül": "09",
+    "Ekim": "10",
+    "Kasım": "11",
+    "Aralık": "12"
+}
+
+turkish_number2month = {
+    "01":"Ocak",
+    "02":"Şubat",
+    "03":"Mart",
+    "04":"Nisan",
+    "05":"Mayıs",
+    "06":"Haziran",
+    "07":"Temmuz",
+    "08":"Ağustos",
+    "09":"Eylül",
+    "10":"Ekim",
+    "11":"Kasım", 
+    "12":"Aralık"
+}
+
+def get_current_month_name():
+   dtn=datetime.now()
+   cm=dtn.strftime("%m")
+
+   print(cm)
+   print(turkish_number2month.get(cm))
+   return turkish_number2month.get(cm)
 
 @app.route('/show_pdas_items')
 def show_pdas_items():

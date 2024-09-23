@@ -2,22 +2,57 @@
 
 {% block content %}
 <div class="container d-flex justify-content-center mt-1 mb-2">
-    <h3>Girilen Eforlar</h3>
+    {% if selected_month == 'Select' %}
+        <h3>Tüm Eforlar</h3>
+    {% elif selected_month == '' %}
+        <h3>Tüm Eforlar</h3>
+    {% else %}
+        <h3>{{selected_month}} Eforları</h3>
+    {% endif %}
 </div>
-<div class="d-flex">
-    <div class="container justify-content-center col-md-3 mt-2 mb-2">
-        <div class="input-group mb-3">
-            <span class="input-group-text">
-                <i class="fa-solid fa-magnifying-glass"></i>
-            </span>
-            <input type="text" class="form-control" id="searchInput" placeholder="Ara .." aria-label="Search" autocomplete="off">
+<div class="container">
+    <div class="row">
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="col-md-2 mb-3 mt-2 ms-3" id="1">
+                <!-- <label for="filter_month" class="form-label">Ay</label> -->
+                <form action="/show_logs" method="POST" id="monthForm">
+                    <select class="form-select" id="filter_month" name="filter_month" onchange="this.form.submit()">
+                        <option value="Select" {% if not selected_month %} selected {% endif %}>Ay seçin..</option>
+                            <option value="Ocak" {% if selected_month == 'Ocak' %}selected{% endif %}>Ocak</option>
+                            <option value="Şubat" {% if selected_month == 'Şubat' %}selected{% endif %}>Şubat</option>
+                            <option value="Mart" {% if selected_month == 'Mart' %}selected{% endif %}>Mart</option>
+                            <option value="Nisan" {% if selected_month == 'Nisan' %}selected{% endif %}>Nisan</option>
+                            <option value="Mayıs" {% if selected_month == 'Mayıs' %}selected{% endif %}>Mayıs</option>
+                            <option value="Haziran" {% if selected_month == 'Haziran' %}selected{% endif %}>Haziran</option>
+                            <option value="Temmuz" {% if selected_month == 'Temmuz' %}selected{% endif %}>Temmuz</option>
+                            <option value="Ağustos" {% if selected_month == 'Ağustos' %}selected{% endif %}>Ağustos</option>
+                            <option value="Eylül" {% if selected_month == 'Eylül' %}selected{% endif %}>Eylül</option>
+                            <option value="Ekim" {% if selected_month == 'Ekim' %}selected{% endif %}>Ekim</option>
+                            <option value="Kasım" {% if selected_month == 'Kasım' %}selected{% endif %}>Kasım</option>
+                            <option value="Aralık" {% if selected_month == 'Aralık' %}selected{% endif %}>Aralık</option>
+                    </select>
+                </form>
+            </div>
+            <div class="col-md-3 mb-3 d-flex justify-content-center" id="2">
+                <div class="container mt-2 mb-2">
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </span>
+                        <input type="text" class="form-control" id="searchInput" placeholder="Ara .." aria-label="Search" autocomplete="off">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2 mb-3 d-flex justify-content-end" id="3">
+                <span class="badge bg-warning rounded-pill text-dark fs-6" id="total_hours"></span>
+            </div>
         </div>
+        
     </div>
 </div>
 
 {% if not logs  %}
-<div class="container d-flex justify-content-center">
-    
+<div class="container d-flex justify-content-center"> 
     <table class="table table-striped">
         <thead>
             <tr class="satir">
@@ -33,20 +68,19 @@
         </thead>
         <tbody>
             <tr class="satir">
-                <td class="col fs4 fst-italic">Henüz efor kaydı yok</td>
+                {% if selected_month == 'Select' %}
+                    <td class="col fs4 fst-italic">Henüz efor kaydı yok</td>    
+                {% else %}
+                    <td class="col fs4 fst-italic">{{selected_month}} ayı için efor kaydı yok</td>
+                {% endif %}
             </tr>
         </tbody>
     </table>
-   
-   
 </div>
 <div class="container d-flex ms-4 mt-4">
    
-    
     {% else %}
-    <div class="d-flex justify-content-end mb-2 mt-2">
-        <span class="badge bg-warning rounded-pill text-dark fs-6" id="total_hours"></span>
-    </div>
+   
     <table class="table table-striped table-transparent ms-4">
         <thead>
             <tr class="satir">
@@ -90,7 +124,7 @@
     </table>
     {% endif %} 
 </div>
-
+<div style="display: none;" id="selected_month_store">{{selected_month}}</div>
 <div class="modal fade" id="deleteLogModal" tabindex="-1" aria-labelledby="deleteLogModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
@@ -128,8 +162,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
 </script>
 <script>
+    // document.getElementById('filter_month').addEventListener('change', function() {
+
+    // var toStore =document.getElementById('filter_month').value;
+    // console.log(toStore);
+    // document.getElementById('selected_month_store').value=toStore;
+
+    // });   
+</script>
+<script>
     document.addEventListener('DOMContentLoaded', function() {
-      var deleteButtons = document.querySelectorAll('.delete-btn');
+
+        var deleteButtons = document.querySelectorAll('.delete-btn');
       var taskIDToDelete = null;
       var rowToDelete = null;
 
@@ -219,5 +263,6 @@ document.addEventListener('DOMContentLoaded', function() {
         total_hours_element.innerHTML=total.toString();
     });
 </script>
+
   <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script> -->
 {% endblock %}
