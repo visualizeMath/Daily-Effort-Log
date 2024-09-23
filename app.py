@@ -262,8 +262,8 @@ def get_current_month_name():
    dtn=datetime.now()
    cm=dtn.strftime("%m")
 
-   print(cm)
-   print(turkish_number2month.get(cm))
+#    print(cm)
+#    print(turkish_number2month.get(cm))
    return turkish_number2month.get(cm)
 
 @app.route('/show_pdas_items')
