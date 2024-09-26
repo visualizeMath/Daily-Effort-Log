@@ -1,15 +1,13 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="mt-2 mb-5 d-flex justify-content-center">
-    <h2>Efor gir</h2>
-</div>
-<div class="container col-md-6">           
+
+<div class="container col-md-6 d-flex justify-content-center">           
     <form method="post" action="{{ url_for('submit_log') }}">
 
         <div class="row">
             <div class="mb-3 col-3">
-                <label for="sprint_no" class="form-label">Sprint No</label>
+                <label for="sprint_no" class="form-label fw-bold">Sprint No</label>
                 <select class="form-select" id="sprint_no" name="sprint_no" required>
                     <option value="Select">Select</option>
                     {% if active_sprints %}
@@ -21,7 +19,7 @@
             </div>
     
             <div class="mb-3 col-3">
-                <label for="harcanan_efor" class="form-label">Efor</label>
+                <label for="harcanan_efor" class="form-label fw-bold">Efor</label>
                 <input type="number" step="1" class="form-control" value="8" id="harcanan_efor" name="harcanan_efor" required min="1" max="12">
             </div>
     
@@ -29,8 +27,8 @@
        
         <div class="row">
 
-            <div class="mb-3 col-4">
-                <label for="task_id" class="form-label">Task ID</label>
+            <div class="mb-2 col-4">
+                <label for="task_id" class="form-label ms-3 fw-bold">Task ID</label>
                 <select class="form-select" id="task_id" name="task_id" required>
                     <!-- <option value="" disabled selected>ID</option> -->
                     {% for task_id in task_ids %}
@@ -42,7 +40,7 @@
            
 
             <div class="mb-3 col">
-                <label for="task_aciklama" class="form-label">Task Açıklaması</label>
+                <label for="task_aciklama" class="form-label fw-bold">Task Açıklaması</label>
                 <input type="text" class="form-control" id="task_aciklama" name="task_aciklama" autocomplete="off" readonly>
             </div>
         </div>
@@ -51,21 +49,21 @@
 
         <div class="row">
             <div class="mb-3 col-6">
-                <label for="tarih" class="form-label">Tarih</label>
+                <label for="tarih" class="form-label fw-bold d-flex justify-content-center">Tarih</label>
                 <input type="date" class="form-control" id="tarih" name="tarih" required>
             </div>
 
             <div class="mb-3 col-5">
-                <label for="gun" class="form-label">Gün</label>
+                <label for="gun" class="form-label fw-bold  d-flex justify-content-center">Gün</label>
                 <input type="text" class="form-control" id="gun" name="gun" readonly>
             </div>
         </div>
 
         <div class="mb-3">
-            <label for="yapilan_is" class="form-label">Yapılan İş</label>
+            <label for="yapilan_is" class="form-label fw-bold  d-flex justify-content-center">Yapılan İş</label>
             <textarea class="form-control" id="yapilan_is" name="yapilan_is" rows="4" autocomplete="off" required></textarea>
         </div>
-        <div class="container d-flex justify-content-center"><button type="submit" class="btn btn-primary">Kaydet</button></div>
+        <div class="container d-flex justify-content-center"><button type="submit" class="btn btn-primary fw-bolder">Kaydet</button></div>
     </form>
 </div>
 
