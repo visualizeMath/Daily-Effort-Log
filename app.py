@@ -367,11 +367,8 @@ def export():
 
 @app.route('/export_to_xl', methods=['GET','POST'])
 def export_to_xl():
-    # print('ok')
-    # Define the path to your SQLite database
     db_path = 'daily_log.db'
 
-    # Define the output file path with the current timestamp
     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
     
     downloads_folder=get_downloads_folder()
@@ -381,8 +378,7 @@ def export_to_xl():
     # Connect to the SQLite database
     conn = sqlite3.connect(db_path)
 
-    # Query the database to get all records from the daily_log table
-    query = 'SELECT * FROM daily_log'
+    query = 'SELECT * FROM daily_log order by tarih'
     df = pd.read_sql_query(query, conn)
 
     if df.empty:
