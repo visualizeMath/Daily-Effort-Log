@@ -195,6 +195,7 @@
             var table = document.querySelector('table');
             var mdl = document.getElementsByClassName('modal-content');
             var mf = document.getElementById('mainDivEnterLog');
+            var mdet = document.getElementById('mainDivEnterTask');
             var listItems = document.getElementsByClassName('list-group-item');
             var detailfordays = document.getElementsByClassName('detailforday');
             var circles = document.getElementsByClassName('circle');
@@ -260,6 +261,13 @@
                     }
                 }
 
+                if (mdet!=null && mdet.length>0)
+                {
+                    if (mdet.classList.contains('alert-light')) {
+                        mdet.classList.remove('alert-light');
+                    }
+                }
+
                 if(circles !=null){
                     for(var i =0;i< circles.length;i++)
                     {
@@ -272,10 +280,16 @@
                 home_icon.style.color="beige";
 
                 var mf = document.getElementById('mainDivEnterLog');
+                var mdet = document.getElementById('mainDivEnterTask');
+
                 if(mf && mf.hasChildNodes() && mf.classList.contains('alert-light'))
                 {
-
                     mf.classList.remove('alert-light');
+                }
+
+                if(mdet && mdet.hasChildNodes() && mdet.classList.contains('alert-light'))
+                {
+                    mdet.classList.remove('alert-light');
                 }
                 var modal_body = document.getElementsByClassName('modal-content');
                 for (var i = 0; i < modal_body.length; i++) {
@@ -343,6 +357,18 @@
                         }
 
                     }
+                    var mdet = document.getElementById('mainDivEnterTask');
+                    if(mdet!=null)
+                    {
+                        if(mdet.classList!=null)
+                        {
+                            if(!mdet.classList.contains('alert-light')) {
+                                mdet.classList.add('alert-light');               
+                            }  
+                        }
+
+                    }
+
                     if ((table !== null && table !== undefined) && table.classList.contains('table-dark')) {
                       table.classList.remove('table-dark');
                     }
@@ -370,6 +396,11 @@
                     if (mf != null && mf.length>0){
                         if ( mf.hasChildNodes() && !mf.classList.contains('alert-light')) {
                             mf.classList.add('alert-light');
+                        }
+                    }
+                    if (mdet != null && mdet.length>0){
+                        if ( mdet.hasChildNodes() && !mdet.classList.contains('alert-light')) {
+                            mdet.classList.add('alert-light');
                         }
                     }
                          // var dm_toggler = document.getElementById('dark-mode-toggle');
@@ -429,6 +460,11 @@
             var mf = document.getElementById('mainDivEnterLog');
             if (mf !=null){
                 mf.classList.toggle('dark-mode');
+            }
+
+            var mdet = document.getElementById('mainDivEnterTask');
+            if (mdet !=null){
+                mdet.classList.toggle('dark-mode');
             }
 
               // Change the background image based on dark mode

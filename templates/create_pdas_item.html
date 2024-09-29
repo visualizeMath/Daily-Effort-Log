@@ -4,11 +4,11 @@
 <div class="mt-2 mb-5 d-flex justify-content-center">
     <h3>Task Oluştur</h3>
 </div>
-<div class="container col-md-6">
+<div class="container col-8 d-flex justify-content-center border rounded border-0 alert" id="mainDivEnterTask" style="opacity: 0.94;">
     <form method="post" action="{{ url_for('submit_pdas_task') }}">
         <div class="row">
-            <div class="mb-3 col-3">
-                <label for="bagli_sprint" class="form-label fw-bold d-flex justify-content-center">Sprint No</label>
+            <div class="mb-3 col-4">
+                <label for="bagli_sprint" class="form-label fw-bold d-flex justify-content-start">Sprint No</label>
                 <select class="form-select" id="bagli_sprint" name="bagli_sprint" required>
                     <!-- <option value="" disabled selected>No</option> -->
                     <option value="16">16</option>
@@ -25,8 +25,8 @@
                 </select>
             </div>
 
-            <div class="mb-3 col-4">
-                <label for="pdas_task_id" class="form-label fw-bold d-flex justify-content-center">Task No</label>
+            <div class="mb-3 col ms-2">
+                <label for="pdas_task_id" class="form-label fw-bold d-flex justify-content-start">Task No</label>
                 <input type="text" class="form-control" id="pdas_task_id" name="pdas_task_id" autocomplete="off" required >
             </div>
 
@@ -35,7 +35,7 @@
            
             
             <div class="mb-3 col">
-                <label for="pdas_task_aciklama" class="form-label fw-bold d-flex justify-content-center">Task Açıklaması</label>
+                <label for="pdas_task_aciklama" class="form-label fw-bold d-flex justify-content-start">Task Açıklaması</label>
                 <input type="text" class="form-control" id="pdas_task_aciklama" name="pdas_task_aciklama" autocomplete="off" required>
             </div>
         
