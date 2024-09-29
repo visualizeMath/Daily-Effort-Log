@@ -131,17 +131,18 @@
                 var taskSelect = document.getElementById('task_id');
                 taskSelect.innerHTML = ''; // Clear existing options
                 
-                // Add the "Select" option as the first element
+                //first element is the select option
                 var selectOption = document.createElement('option');
                 selectOption.value = "";
                 selectOption.textContent = "Select";
                 taskSelect.appendChild(selectOption);
-
+                
                 data.forEach(task_id => {
+                    console.log(task_id);
                     
                         var option = document.createElement('option');
-                        option.value = task_id;
-                        option.textContent = task_id;
+                        option.value = task_id.split(';')[0];
+                        option.textContent = '( '+task_id.split(';')[0] +' )' +' '+task_id.split(';')[1];
                         taskSelect.appendChild(option);
                     
                    

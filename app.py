@@ -89,15 +89,20 @@ def get_selectedtaskname():
 def get_tasks_for_sprint(sprint_no):
     conn = sqlite3.connect('daily_log.db')
     c = conn.cursor()
-    c.execute(f'SELECT pdas_task_id FROM pdas WHERE bagli_sprint ={sprint_no} ')
+    c.execute(f'SELECT pdas_task_id,pdas_task_aciklama FROM pdas WHERE bagli_sprint ={sprint_no} ')
    
     dependent_tasks=[]
 
     for row in c.fetchall():
         # print('satir: '+row[0]+' \n')
         spNo=row[0].strip()
+        task_description=row[1].strip()
+        # print(task_description)
+
         if(len(spNo)>0 and spNo.isdigit()):
-            dependent_tasks.append(spNo)
+            dependent_tasks.append(spNo+';'+task_description)
+        
+        print(dependent_tasks)
     conn.close()
     # dependent_tasks=dependent_tasks.sort()
     return sorted(dependent_tasks)
