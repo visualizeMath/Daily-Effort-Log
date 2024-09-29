@@ -2,12 +2,12 @@
 
 {% block content %}
 
-<div class="container col-md-6 d-flex justify-content-center">           
+<div class="container col-md-6 d-flex justify-content-center border rounded border-0 alert" id="mainDivEnterLog" style="opacity: 0.94;">           
     <form method="post" action="{{ url_for('submit_log') }}">
 
         <div class="row">
-            <div class="mb-3 col-3">
-                <label for="sprint_no" class="form-label fw-bold">Sprint No</label>
+            <div class="mb-3 col-4 me-3">
+                <label for="sprint_no" class="form-label fw-bold d-flex justify-content-start">Sprint No</label>
                 <select class="form-select" id="sprint_no" name="sprint_no" required>
                     <option value="Select">Select</option>
                     {% if active_sprints %}
@@ -19,16 +19,29 @@
             </div>
     
             <div class="mb-3 col-3">
-                <label for="harcanan_efor" class="form-label fw-bold">Efor</label>
+                <label for="harcanan_efor" class="form-label fw-bold d-flex justify-content-start">Efor</label>
                 <input type="number" step="1" class="form-control" value="8" id="harcanan_efor" name="harcanan_efor" required min="1" max="12">
             </div>
     
+        </div>
+
+        
+        <div class="row">
+            <div class="mb-3 col-6">
+                <label for="tarih" class="form-label fw-bold d-flex justify-content-start">Tarih</label>
+                <input type="date" class="form-control" id="tarih" name="tarih" required>
+            </div>
+
+            <div class="mb-3 col-5">
+                <label for="gun" class="form-label fw-bold  d-flex justify-content-start">Gün</label>
+                <input type="text" class="form-control" id="gun" name="gun" readonly>
+            </div>
         </div>
        
         <div class="row">
 
             <div class="mb-2 col-4">
-                <label for="task_id" class="form-label ms-3 fw-bold">Task ID</label>
+                <label for="task_id" class="form-label fw-bold  d-flex justify-content-start">Task No</label>
                 <select class="form-select" id="task_id" name="task_id" required>
                     <!-- <option value="" disabled selected>ID</option> -->
                     {% for task_id in task_ids %}
@@ -47,20 +60,9 @@
         
        
 
-        <div class="row">
-            <div class="mb-3 col-6">
-                <label for="tarih" class="form-label fw-bold d-flex justify-content-center">Tarih</label>
-                <input type="date" class="form-control" id="tarih" name="tarih" required>
-            </div>
 
-            <div class="mb-3 col-5">
-                <label for="gun" class="form-label fw-bold  d-flex justify-content-center">Gün</label>
-                <input type="text" class="form-control" id="gun" name="gun" readonly>
-            </div>
-        </div>
-
-        <div class="mb-3">
-            <label for="yapilan_is" class="form-label fw-bold  d-flex justify-content-center">Yapılan İş</label>
+        <div class="mb-3 col">
+            <label for="yapilan_is" class="form-label fw-bold  d-flex justify-content-start">Yapılan İş</label>
             <textarea class="form-control" id="yapilan_is" name="yapilan_is" rows="4" autocomplete="off" required></textarea>
         </div>
         <div class="container d-flex justify-content-center"><button type="submit" class="btn btn-primary fw-bolder">Kaydet</button></div>
@@ -78,6 +80,7 @@
 </script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+    // applyChanges();
     var today = new Date();
     var day = String(today.getDate()).padStart(2,'0');
     var month= String(today.getMonth()+1).padStart(2,'0');

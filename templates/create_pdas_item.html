@@ -26,7 +26,7 @@
             </div>
 
             <div class="mb-3 col-4">
-                <label for="pdas_task_id" class="form-label fw-bold d-flex justify-content-center">Task ID</label>
+                <label for="pdas_task_id" class="form-label fw-bold d-flex justify-content-center">Task No</label>
                 <input type="text" class="form-control" id="pdas_task_id" name="pdas_task_id" autocomplete="off" required >
             </div>
 
@@ -44,13 +44,16 @@
 </div>
 
 <script>
-    document.getElementById('tarih').addEventListener('change', function() {
-        var tarih = new Date(this.value);
-        var gunler = ['Pazar', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi'];
-        var gun = gunler[tarih.getDay()];
-        document.getElementById('gun').value = gun;
-    });
-
+    var trh = document.getElementById('tarih');
+    if (trh != null) {
+        document.getElementById('tarih').addEventListener('change', function() {
+            var tarih = new Date(this.value);
+            var gunler = ['Pazar', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi'];
+            var gun = gunler[tarih.getDay()];
+            document.getElementById('gun').value = gun;
+        });
+    }
+        
    
 </script>
 <script>
@@ -62,13 +65,19 @@
 
     var tarih = year+'-'+month+'-'+day;
     
-    // console.log('Tarih: '+tarih)
-    document.getElementById('tarih').value=tarih;
+    if(document.getElementById('tarih')!=null)
+    {
+        document.getElementById('tarih').value=tarih;
+    }
 
     // var tarih = new Date(this.value);
         var gunler = ['Pazar', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi'];
         var gun = gunler[today.getDay()];
-        document.getElementById('gun').value = gun;
+        if(document.getElementById('gun')!=null)
+        {
+
+            document.getElementById('gun').value = gun;
+        }
 
     });
 </script>
