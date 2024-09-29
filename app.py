@@ -426,7 +426,6 @@ def get_current_year():
 # Route to generate the summary report
 @app.route('/summary')
 def summary():
-    print('Summary route called')
     # Connect to the SQLite database
     conn = sqlite3.connect('daily_log.db')
     cursor = conn.cursor()

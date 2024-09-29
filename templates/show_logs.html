@@ -108,12 +108,12 @@
                 <td class="col-5" id="log-{{ loop.index }}">{{ log[6] }}</td>
                 <td class="col-1" id="hours">{{ log[5] }}</td>
                 <td class="col">
-                    <button type="button" class="btn btn-secondary btn-sm ms-3 rounded-pill copy-btn"  data-log-id="log-{{ loop.index }}">
+                    <button type="button" class="btn btn-secondary btn-sm ms-3 rounded-pill copy-btn"  data-log-id="log-{{ loop.index }}"  data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-html="true" title="<b>Kopyala</b>">
                         <i class="fa-regular fa-copy"></i>
                     </button>
                 </td>
                 <td class="col">
-                    <button type="button" class="btn p-0 border-0 btn-md delete-btn" data-task-id="{{ log[0] }}" style="color:red">
+                    <button type="button" class="btn p-0 border-0 btn-md delete-btn" data-task-id="{{ log[0] }}" style="color:red" data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-html="true" title="<b>Sil</b>">
                         <i class="fa-solid fa-trash"></i>
                     </button>
                 </td> 
