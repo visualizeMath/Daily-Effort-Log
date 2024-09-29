@@ -1,0 +1,13 @@
+services:
+  app:
+    image: ibrodc/effort-log-app:v2.0.6
+    build: .
+    volumes:
+      - C:\mytasks_data:/app/data
+    ports:
+      - "5000:5000" 
+    environment:
+      - FLASK_ENV=development
+
+volumes:
+  sqlite_data:

@@ -122,11 +122,9 @@
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
-                    <div class="alert alert-{{ category }} fade show fs-6 fw-bold" role="alert">
+                    <div class="alert alert-{{ category }} fade show alert-dismissible fs-6" role="alert">
                         {{ message }}
-                        <!-- <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"> -->
-                            
-                        </button>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                     
                 {% endfor %}
@@ -170,7 +168,7 @@
             </div>
             <div class="col-9">
                 {% block content %}
-                
+               
                   
                 {% endblock %}
             </div>

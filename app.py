@@ -11,8 +11,11 @@ app = Flask(__name__)
 
 app.secret_key = secrets.token_hex(16)
 
+db_path = '/app/data/daily_log.db'
+# db_path = 'daily_log.db'
+
 def init_db():
-    conn = sqlite3.connect('daily_log.db')
+    conn = sqlite3.connect(db_path)
     c = conn.cursor()
     c.execute('''CREATE TABLE IF NOT EXISTS daily_log (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -87,7 +90,7 @@ def get_selectedtaskname():
 
 
 def get_tasks_for_sprint(sprint_no):
-    conn = sqlite3.connect('daily_log.db')
+    conn = sqlite3.connect(db_path)
     c = conn.cursor()
     c.execute(f'SELECT pdas_task_id,pdas_task_aciklama FROM pdas WHERE bagli_sprint ={sprint_no} ')
    
@@ -107,7 +110,7 @@ def get_tasks_for_sprint(sprint_no):
     return sorted(dependent_tasks)
 
 def get_taskname_for_selected_task(task_id):
-    conn = sqlite3.connect('daily_log.db')
+    conn = sqlite3.connect(db_path)
     c = conn.cursor()
     c.execute(f'SELECT pdas_task_aciklama FROM pdas WHERE pdas_task_id ={task_id} ')
    
@@ -137,7 +140,7 @@ def submit_log():
     harcanan_efor = request.form['harcanan_efor']
     yapilan_is = request.form['yapilan_is'].encode('utf-8').decode('utf-8')
 
-    conn = sqlite3.connect('daily_log.db')
+    conn = sqlite3.connect(db_path)
     c = conn.cursor()
     c.execute('''INSERT INTO daily_log (task_id, task_aciklama, tarih,gun, harcanan_efor, yapilan_is) 
                  VALUES (?, ?, ?, ?, ?, ?)''', 
@@ -151,7 +154,7 @@ def submit_log():
     return redirect(url_for('index'))
 
 def insert_vocab(file_path):
-    conn=sqlite3.connect('daily_log.db')
+    conn=sqlite3.connect(db_path)
     cursor=conn.cursor()
 
     with open(file_path, 'r', encoding='utf-8') as file:
@@ -184,7 +187,7 @@ def submit_pdas_task():
     pdas_task_aciklama = request.form['pdas_task_aciklama']
     bagli_sprint = request.form['bagli_sprint']
 
-    conn = sqlite3.connect('daily_log.db')
+    conn = sqlite3.connect(db_path)
     c = conn.cursor()
     c.execute('''INSERT INTO pdas (pdas_task_id, pdas_task_aciklama, bagli_sprint) 
                  VALUES (?, ?, ?)''', 
@@ -196,14 +199,14 @@ def submit_pdas_task():
         flash(f'PDAS kaydı kaydedilemedi.', 'danger')
     flash(f'{pdas_task_id} - {pdas_task_aciklama} PDAS kaydı girildi.', 'success')
 
-    return redirect(url_for('index'))
+    return redirect(url_for('create_pdas_item'))
 
 
 @app.route('/show_logs',methods=['GET','POST'])
 def show_logs():
 
     selected_month=get_current_month_name()
-    conn = sqlite3.connect('daily_log.db')
+    conn = sqlite3.connect(db_path)
     c = conn.cursor()
 
     if request.method=='GET':
@@ -271,7 +274,7 @@ def get_current_month_name():
 
 @app.route('/show_pdas_items')
 def show_pdas_items():
-    conn = sqlite3.connect('daily_log.db')
+    conn = sqlite3.connect(db_path)
     c = conn.cursor()
     c.execute('SELECT * FROM pdas order by id desc')
     pdas_logs = c.fetchall()
@@ -291,7 +294,7 @@ def delete_task():
     
     try:
         # Connect to the database and delete the task
-        conn = sqlite3.connect('daily_log.db')
+        conn = sqlite3.connect(db_path)
         cursor = conn.cursor()
         
         cursor.execute("DELETE FROM pdas WHERE pdas_task_id = ?", (task_id,))
@@ -333,7 +336,7 @@ def delete_log():
     
     try:
         # Connect to the database and delete the task
-        conn = sqlite3.connect('daily_log.db')
+        conn = sqlite3.connect(db_path)
         cursor = conn.cursor()
 
         cursor.execute("select yapilan_is FROM daily_log WHERE id = ?", (task_id,))
@@ -374,7 +377,8 @@ def export_to_xl():
 
     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
     
-    downloads_folder=get_downloads_folder()
+    # downloads_folder=get_downloads_folder()
+    downloads_folder='/app/data/'
 
     output_file = f'{downloads_folder}/daily_log_export_{timestamp}.xlsx'
 
@@ -383,6 +387,7 @@ def export_to_xl():
 
     query = 'SELECT * FROM daily_log order by tarih'
     df = pd.read_sql_query(query, conn)
+    conn.close()
 
     if df.empty:
         print("No record found in the database..")
@@ -392,7 +397,7 @@ def export_to_xl():
         print("There are records in the db..")
 
         # Close the database connection
-        conn.close()
+        # conn.close()
 
         # Write the DataFrame to an Excel file
         df.to_excel(output_file, index=False, engine='openpyxl')
@@ -427,7 +432,7 @@ def get_current_year():
 @app.route('/summary')
 def summary():
     # Connect to the SQLite database
-    conn = sqlite3.connect('daily_log.db')
+    conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
     current_year = get_current_year().strip()
     current_month = get_current_month().strip()
@@ -485,7 +490,7 @@ def get_color(total_efor):
         return 'orange'
 
 def get_tasks_of_day(given_date):
-    conn=sqlite3.connect('daily_log.db')
+    conn=sqlite3.connect(db_path)
     cursor=conn.cursor()
     # print(given_date)
     cursor.execute("select * from daily_log where tarih = ?",(given_date,))
@@ -499,7 +504,7 @@ def get_tasks_of_day(given_date):
     return tasks_of_day
 
 def getword2practice():
-    conn = sqlite3.connect('daily_log.db')
+    conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
 
     cursor.execute('SELECT count(*) from dictionary')
@@ -517,7 +522,7 @@ def getword2practice():
         return None
 
 def get_sprints_with_active_tasks():
-    conn= sqlite3.connect('daily_log.db')
+    conn= sqlite3.connect(db_path)
     cursor =conn.cursor()
 
     cursor.execute('select max( distinct bagli_sprint) from pdas')
