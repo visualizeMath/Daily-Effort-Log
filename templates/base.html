@@ -159,7 +159,7 @@
                         <i class="fa-solid fa-bars me-2"></i>Özet</a>
                     
 
-                    <!-- <a href="{{ url_for('export') }}" class="list-group-item list-group-item-action list-group-item-warning mt-2 mb-2 rounded-pill"><i class="fa-regular fa-share-from-square me-2"></i>Dışa Aktar</a> -->
+                    <a href="{{ url_for('export') }}" class="list-group-item list-group-item-action list-group-item-warning mt-2 mb-2 rounded-pill"><i class="fa-regular fa-share-from-square me-2"></i>Dışa Aktar</a>
                    
                 </div>
                 <div class="container ms-2 mb-3 mt-5">
@@ -195,6 +195,7 @@
             var table = document.querySelector('table');
             var mdl = document.getElementsByClassName('modal-content');
             var mf = document.getElementById('mainDivEnterLog');
+            var mdw = document.getElementById('mainDivWords');
             var mdet = document.getElementById('mainDivEnterTask');
             var listItems = document.getElementsByClassName('list-group-item');
             var detailfordays = document.getElementsByClassName('detailforday');
@@ -261,6 +262,13 @@
                     }
                 }
 
+                if (mdw!=null && mdw.length>0)
+                {
+                    if (mdw.classList.contains('alert-light')) {
+                        mdw.classList.remove('alert-light');
+                    }
+                }
+
                 if (mdet!=null && mdet.length>0)
                 {
                     if (mdet.classList.contains('alert-light')) {
@@ -280,11 +288,16 @@
                 home_icon.style.color="beige";
 
                 var mf = document.getElementById('mainDivEnterLog');
+                var mdw = document.getElementById('mainDivWords');
                 var mdet = document.getElementById('mainDivEnterTask');
 
                 if(mf && mf.hasChildNodes() && mf.classList.contains('alert-light'))
                 {
                     mf.classList.remove('alert-light');
+                }
+                if(mdw && mdw.hasChildNodes() && mdw.classList.contains('alert-light'))
+                {
+                    mdw.classList.remove('alert-light');
                 }
 
                 if(mdet && mdet.hasChildNodes() && mdet.classList.contains('alert-light'))
@@ -313,15 +326,6 @@
                         moonicon.classList.add('fa-sun');   
                     }
                 }
-            
-    
-              
-             // when dark-mode is disabled
-            
-               
-
-           
-
             
             }                
                  else //Dark mode disabled
@@ -353,6 +357,18 @@
                         {
                             if(!mf.classList.contains('alert-light')) {
                                 mf.classList.add('alert-light');               
+                            }  
+                        }
+
+                    }
+
+                    var mdw = document.getElementById('mainDivWords');
+                    if(mdw!=null)
+                    {
+                        if(mdw.classList!=null)
+                        {
+                            if(!mdw.classList.contains('alert-light')) {
+                                mdw.classList.add('alert-light');               
                             }  
                         }
 
@@ -403,8 +419,11 @@
                             mdet.classList.add('alert-light');
                         }
                     }
-                         // var dm_toggler = document.getElementById('dark-mode-toggle');
-                // var moonicon = document.getElementById('moonorsun');
+                    if (mdw != null && mdw.length>0){
+                        if ( mdw.hasChildNodes() && !mdw.classList.contains('alert-light')) {
+                            mdw.classList.add('alert-light');
+                        }
+                    }
 
                 if(dm_toggler != null && dm_toggler.classList!=null){
                    if (dm_toggler.classList.contains('btn-light'))
@@ -413,6 +432,7 @@
                         dm_toggler.classList.add('btn-secondary');
                     } 
                 }
+
                 if(moonicon !=null && moonicon.classList!=null)
                 {
                     if(moonicon.classList.contains('fa-sun'))
@@ -423,7 +443,6 @@
                 }
 
                  }
-                //  location.reload(); 
 
         }
         // Function to toggle dark mode
@@ -458,8 +477,13 @@
             }
 
             var mf = document.getElementById('mainDivEnterLog');
+            var mdw = document.getElementById('mainDivWords');
+
             if (mf !=null){
                 mf.classList.toggle('dark-mode');
+            }
+            if (mdw !=null){
+                mdw.classList.toggle('dark-mode');
             }
 
             var mdet = document.getElementById('mainDivEnterTask');

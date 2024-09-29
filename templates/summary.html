@@ -76,7 +76,7 @@
                
             {% endfor %}
             <hr>
-            <div class="total h3 ms-auto">{{ row.row_total }}</div>
+            <div class="total h3 ms-auto" data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-html="true" title="<b>{{loop.index}}. Hafta toplam efor (saat) </b>">{{ row.row_total }}</div>
             <hr>
         </div>
     </div>
