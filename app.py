@@ -433,8 +433,8 @@ def summary():
     current_year = get_current_year().strip()
     current_month = get_current_month().strip()
 
-    print('Current Year: '+current_year)
-    print('Current Month: '+current_month)
+    # print('Current Year: '+current_year)
+    # print('Current Month: '+current_month)
 
     # Fetch sum of harcanan_efor grouped by date (tarih)
     cursor.execute("""
@@ -444,7 +444,8 @@ def summary():
         GROUP BY tarih
     """,(f'%.{current_month}.{current_year}',))
     rows = cursor.fetchall()
-    print(rows)
+
+    # print(rows)
     related_efforts_of_day=[]
     # Filter only weekdays and format dates
     data = []
