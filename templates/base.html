@@ -51,9 +51,11 @@
             line-height: 1.2;
             position: relative;
             cursor: pointer;
+            
         }
         .circle:hover {
             cursor:pointer;
+            filter: brightness(1.3);
         }
         .circle.green {
             background-color: #7adf90;
@@ -162,7 +164,7 @@
                 </div>
                 <div class="container ms-2 mb-3 mt-5">
                     <button id="dark-mode-toggle" class="btn btn-secondary">
-                        <i class="fa fa-moon" id="moonorsun"></i>
+                        <i class="fa-regular fa-moon" id="moonorsun"></i>
                     </button>
                 </div>
             </div>
@@ -196,9 +198,11 @@
             var listItems = document.getElementsByClassName('list-group-item');
             var detailfordays = document.getElementsByClassName('detailforday');
             var circles = document.getElementsByClassName('circle');
+            var dm_toggler = document.getElementById('dark-mode-toggle');
+            var moonicon = document.getElementById('moonorsun');
 
-            console.log(detailfordays);
-            console.log("dark mode:"+localStorage.getItem('darkMode'));
+            // console.log(detailfordays);
+            // console.log("dark mode:"+localStorage.getItem('darkMode'));
 
             if (localStorage.getItem('darkMode') === 'enabled') {
 
@@ -278,6 +282,32 @@
                     modal_body[i].classList.add('bg-dark');
                     modal_body[i].classList.add('text-white');
                 }
+                
+                
+                if(dm_toggler != null && dm_toggler.classList!=null){
+                   if (dm_toggler.classList.contains('btn-secondary'))
+                    {
+                        dm_toggler.classList.remove('btn-secondary');
+                        dm_toggler.classList.add('btn-light');
+                    } }
+
+                if(moonicon !=null && moonicon.classList!=null)
+                {
+                    if(moonicon.classList.contains('fa-moon'))
+                    {
+                        moonicon.classList.remove('fa-moon');   
+                        moonicon.classList.add('fa-sun');   
+                    }
+                }
+            
+    
+              
+             // when dark-mode is disabled
+            
+               
+
+           
+
             
             }                
                  else //Dark mode disabled
@@ -342,6 +372,25 @@
                             mf.classList.add('alert-light');
                         }
                     }
+                         // var dm_toggler = document.getElementById('dark-mode-toggle');
+                // var moonicon = document.getElementById('moonorsun');
+
+                if(dm_toggler != null && dm_toggler.classList!=null){
+                   if (dm_toggler.classList.contains('btn-light'))
+                    {
+                        dm_toggler.classList.remove('btn-light');
+                        dm_toggler.classList.add('btn-secondary');
+                    } 
+                }
+                if(moonicon !=null && moonicon.classList!=null)
+                {
+                    if(moonicon.classList.contains('fa-sun'))
+                    {
+                        moonicon.classList.remove('fa-sun');   
+                        moonicon.classList.add('fa-moon');   
+                    }
+                }
+
                  }
                 //  location.reload(); 
 
@@ -419,50 +468,7 @@
         // }
     
    
-                // var dm_toggler = document.getElementById('dark-mode-toggle');
-                // var moonicon = document.getElementById('moonorsun');
-                
-                // if(dm_toggler != null && dm_toggler.classList!=null){
-                //    if (dm_toggler.classList.contains('btn-secondary'))
-                //     {
-                //         dm_toggler.classList.remove('btn-secondary');
-                //         dm_toggler.classList.add('btn-light');
-                //     } 
-
-                // if(moonicon !=null && moonicon.classList!=null)
-                // {
-                //     if(moonicon.classList.contains('fa fa-moon'))
-                //     {
-                //         moonicon.classList.remove('fa fa-moon');   
-                //         moonicon.classList.add('fa-regular fa-sun');   
-                //     }
-                // }
-            
-    
-              
-             // when dark-mode is disabled
-            
-               
-
-                // var dm_toggler = document.getElementById('dark-mode-toggle');
-                // var moonicon = document.getElementById('moonorsun');
-
-                // if(dm_toggler != null && dm_toggler.classList!=null){
-                //    if (dm_toggler.classList.contains('btn-light'))
-                //     {
-                //         dm_toggler.classList.remove('btn-light');
-                //         dm_toggler.classList.add('btn-secondary');
-                //     } 
-                // }
-                // if(moonicon !=null && moonicon.classList!=null)
-                // {
-                //     if(moonicon.classList.contains('fa-regular fa-sun'))
-                //     {
-                //         moonicon.classList.remove('fa-regular fa-sun');   
-                //         moonicon.classList.add('fa fa-moon');   
-                //     }
-                // }
-
+       
                 
                
 
@@ -493,6 +499,12 @@
       var alertList = document.querySelectorAll('.alert')
         alertList.forEach(function (alert) {
             new bootstrap.Alert(alert)
+        })
+    </script>
+    <script>
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
         })
     </script>
 </body>
