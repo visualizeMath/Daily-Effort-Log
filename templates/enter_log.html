@@ -45,8 +45,8 @@
                 <select class="form-select" id="task_id" name="task_id" required>
                     <!-- <option value="" disabled selected>ID</option> -->
                     {% for task_id in task_ids %}
-                        <option value="{{ task_id }}">
-                            {{ task_id }}</option>
+                        <option value="{{ task_id }}"> {{ task_id }}</option>
+                       
                     {% endfor %}
                     <!-- Add more options as needed -->
                 </select>
@@ -138,11 +138,11 @@
                 taskSelect.appendChild(selectOption);
                 
                 data.forEach(task_id => {
-                    console.log(task_id);
-                    
+
                         var option = document.createElement('option');
                         option.value = task_id.split(';')[0];
                         option.textContent = '( '+task_id.split(';')[0] +' )' +' '+task_id.split(';')[1];
+                       
                         taskSelect.appendChild(option);
                     
                    

@@ -102,7 +102,6 @@ def get_tasks_for_sprint(sprint_no):
         if(len(spNo)>0 and spNo.isdigit()):
             dependent_tasks.append(spNo+';'+task_description)
         
-        print(dependent_tasks)
     conn.close()
     # dependent_tasks=dependent_tasks.sort()
     return sorted(dependent_tasks)
@@ -154,7 +153,6 @@ def submit_log():
 def insert_vocab(file_path):
     conn=sqlite3.connect('daily_log.db')
     cursor=conn.cursor()
-    print('insert_vocab called')
 
     with open(file_path, 'r', encoding='utf-8') as file:
         print('inside file reading')
@@ -415,21 +413,38 @@ def format_date(tarih):
     }
     return f"{day} {turkish_months[month_name]}"
 
+def get_current_month():
+    dtn=datetime.now()
+    cm=dtn.strftime("%m")
+    return cm
+
+def get_current_year():
+    dtn=datetime.now()
+    cy=dtn.strftime("%Y")
+    return cy
+
 # Route to generate the summary report
 @app.route('/summary')
 def summary():
+    print('Summary route called')
     # Connect to the SQLite database
     conn = sqlite3.connect('daily_log.db')
     cursor = conn.cursor()
+    current_year = get_current_year().strip()
+    current_month = get_current_month().strip()
+
+    print('Current Year: '+current_year)
+    print('Current Month: '+current_month)
 
     # Fetch sum of harcanan_efor grouped by date (tarih)
     cursor.execute("""
         SELECT tarih, SUM(harcanan_efor) as total_efor 
         FROM daily_log 
+        WHERE tarih LIKE ?
         GROUP BY tarih
-    """)
+    """,(f'%.{current_month}.{current_year}',))
     rows = cursor.fetchall()
-    
+    print(rows)
     related_efforts_of_day=[]
     # Filter only weekdays and format dates
     data = []
