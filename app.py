@@ -151,7 +151,7 @@ def submit_log():
     if c.rowcount == 0:
         flash(f'Kayıt oluşturulurken hata oluştu.', 'danger')
     flash(f'{formatted_tarih}- {gun} - {task_aciklama} icin efor kaydı girildi.', 'success')
-    return redirect(request.referrer)
+    return redirect(url_for('enter_log'))
 
 def insert_vocab(file_path):
     conn=sqlite3.connect(db_path)
@@ -377,8 +377,8 @@ def export_to_xl():
 
     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
     
-    # downloads_folder=get_downloads_folder()
-    downloads_folder='/app/data/'
+    downloads_folder=get_downloads_folder()
+    # downloads_folder='/app/data/'
 
     output_file = f'{downloads_folder}/daily_log_export_{timestamp}.xlsx'
 

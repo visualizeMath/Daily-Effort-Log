@@ -105,6 +105,14 @@
                 // Find the related detail div and display it
                 const detailDiv = document.getElementById('detailforday-' + tarih);
                 if (detailDiv) {
+                    // Get the circle's position
+                    const circleRect = circle.getBoundingClientRect();
+                    
+                    // Position the detailDiv just above the circle
+                    detailDiv.style.top = (window.scrollY + circleRect.top - detailDiv.offsetHeight + 82) + 'px';
+                    detailDiv.style.left = (window.scrollX + circleRect.left + (circleRect.width / 2) - (detailDiv.offsetWidth / 2)) + 'px';
+
+                    // Show the detailDiv
                     detailDiv.style.display = 'block';
                 }
             });
@@ -118,8 +126,43 @@
                     detailDiv.style.display = 'none';
                 }
             });
+
         });
     });
 </script>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const circles = document.querySelectorAll('.circle');
+    
+        circles.forEach(circle => {
+            circle.addEventListener('mouseenter', function (e) {
+                const detailDivId = `#detailforday-${circle.getAttribute('data-tarih')}`;
+                const detailDiv = document.querySelector(detailDivId);
+    
+                if (detailDiv) {
+                    // Get the circle's position
+                    const circleRect = circle.getBoundingClientRect();
+                    
+                    // Position the detailDiv just above the circle
+                    detailDiv.style.top = (window.scrollY + circleRect.top - detailDiv.offsetHeight - 10) + 'px';
+                    detailDiv.style.left = (window.scrollX + circleRect.left + (circleRect.width / 2) - (detailDiv.offsetWidth / 2)) + 'px';
+    
+                    // Show the detailDiv
+                    detailDiv.style.display = 'block';
+                }
+            });
+    
+            circle.addEventListener('mouseleave', function () {
+                const detailDivId = `#detailforday-${circle.getAttribute('data-tarih')}`;
+                const detailDiv = document.querySelector(detailDivId);
+                
+                if (detailDiv) {
+                    detailDiv.style.display = 'none';
+                }
+            });
+        });
+    });
+    </script>
+    
 {% endblock %}
