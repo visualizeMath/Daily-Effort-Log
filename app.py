@@ -11,8 +11,8 @@ app = Flask(__name__)
 
 app.secret_key = secrets.token_hex(16)
 
-db_path = '/app/data/daily_log.db'
-# db_path = 'daily_log.db'
+# db_path = '/app/data/daily_log.db'
+db_path = 'daily_log.db'
 
 def init_db():
     conn = sqlite3.connect(db_path)
@@ -151,7 +151,7 @@ def submit_log():
     if c.rowcount == 0:
         flash(f'Kayıt oluşturulurken hata oluştu.', 'danger')
     flash(f'{formatted_tarih}- {gun} - {task_aciklama} icin efor kaydı girildi.', 'success')
-    return redirect(url_for('index'))
+    return redirect(request.referrer)
 
 def insert_vocab(file_path):
     conn=sqlite3.connect(db_path)
