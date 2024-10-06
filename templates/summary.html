@@ -6,7 +6,11 @@
 
 <div class="container">
     <div class="container d-flex justify-content-center mt-0 py-0 mb-1" data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-html="true" title="<b>Güncel ayın eforlarını task kırılımlarıyla gösterir.. </b>">
-        <h3>Aylık Efor Özeti</h3>
+        {% if turkish_month_name %}
+            <h3>{{turkish_month_name}} Ayı Efor Özeti</h3>
+        {% else %}
+            <h3>Aylık Efor Özeti</h3>
+        {% endif %}
     </div>
 
     <!-- <div class="container mb-1 mt-5">

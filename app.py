@@ -210,9 +210,12 @@ def show_logs():
     c = conn.cursor()
 
     if request.method=='GET':
-        c.execute('SELECT * FROM daily_log ORDER BY id DESC')
+        month_no = get_current_month()
+        c.execute('SELECT * FROM daily_log WHERE tarih like ? ORDER BY id DESC', ('%.{}.%'.format(month_no),))
 
-    elif request.method=='POST':
+        # c.execute('SELECT * FROM daily_log ORDER BY id DESC')
+
+    if request.method=='POST':
 
         selected_month= request.form.get('filter_month')
 
@@ -477,8 +480,10 @@ def summary():
         rows_of_circles.append({'circles': row_data, 'row_total': row_total})
 
     word2practice=getword2practice()
-    # print(str(word2practice))
-    return render_template('summary.html', rows_of_circles=rows_of_circles,word2practice=word2practice)
+    turkish_month_name=get_current_month_name()
+
+    print(str(current_month))
+    return render_template('summary.html', rows_of_circles=rows_of_circles,word2practice=word2practice,turkish_month_name=turkish_month_name)
 
 # Determine the color of the circle based on total effort
 def get_color(total_efor):

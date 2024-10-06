@@ -64,6 +64,7 @@
                 <th scope="col-5">Yapılan İş</th>
                 <th scope="col-1">Efor</th>
                 <th scope="col"></th>
+                <th scope="col"></th>
             </tr>
         </thead>
         <tbody>
@@ -93,6 +94,7 @@
                 <th scope="col-1">Efor</th>
                 <th scope="col-1"></th>
                 <th scope="col-1"></th>
+                <th scope="col-1"></th>
             </tr>
         </thead>
         <tbody id="logs_body">         
@@ -107,8 +109,15 @@
                 <td class="col-2">{{ log[2] }}</td>
                 <td class="col-5" id="log-{{ loop.index }}">{{ log[6] }}</td>
                 <td class="col-1" id="hours">{{ log[5] }}</td>
+               
                 <td class="col">
-                    <button type="button" class="btn btn-secondary btn-sm ms-3 rounded-pill copy-btn"  data-log-id="log-{{ loop.index }}"  data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-html="true" title="<b>Kopyala</b>">
+
+                    <!-- <button type="button" class="btn btn-secondary btn-sm ms-1 rounded-pill edit-btn"  data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-html="true" title="<b>Düzenle</b>">
+                        <i class="fa-solid fa-edit"></i>
+                    </button> -->
+                </td>
+                <td class="col">
+                    <button type="button" class="btn btn-secondary btn-sm ms-1 rounded-pill copy-btn"  data-log-id="log-{{ loop.index }}"  data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-html="true" title="<b>Kopyala</b>">
                         <i class="fa-regular fa-copy"></i>
                     </button>
                 </td>
@@ -151,6 +160,13 @@ document.addEventListener('DOMContentLoaded', function() {
         button.addEventListener('click', function() {
             var logId = this.getAttribute('data-log-id');
             var textToCopy = document.getElementById(logId).textContent;
+           
+            // this.setAttribute('title', 'Kopyalandi'); 
+            // this.dataset.bsOriginalTitle = 'Kopyalandi'; 
+            var tooltip = bootstrap.Tooltip.getInstance(this); 
+            if (tooltip) {
+                tooltip.setContent({ '.tooltip-inner': '<b>Kopyalandı</b>' });
+            }
 
             // Copy the text to the clipboard
             navigator.clipboard.writeText(textToCopy).then(function() {
