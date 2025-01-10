@@ -530,7 +530,7 @@ def get_sprints_with_active_tasks():
     conn= sqlite3.connect(db_path)
     cursor =conn.cursor()
 
-    cursor.execute('select max( distinct bagli_sprint) from pdas')
+    cursor.execute('select max( distinct bagli_sprint) from pdas where bagli_sprint<=10')
     available_sprints= cursor.fetchall()
     conn.close()
 

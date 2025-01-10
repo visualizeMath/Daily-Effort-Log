@@ -1,0 +1,92 @@
+[{"uuid": "94a1267f-073f-3958-b6cc-02aa318427cc",
+  "_class": "com.pepsico.dtcloyalty.profileservice.domain.entities.ProfileEntity",
+  "authentication_data": {
+    "factor_status": "ALREADY_ACTIVE",
+    "factor_type": "Phone",
+    "identity_id": "00u284j81j8WR0LbS0h8",
+    "identity_provider": "OKTA",
+    "identity_type": "Phone"
+  },
+  "consent_data": {
+    "privacy_policy": null,
+    "terms_and_conditions": [
+      {
+        "content_id": "ca2db2c5-fd47-4eb5-b7ec-e58ad2c803ab",
+        "date_accepted": "2024-10-24T11:44:46.977047Z",
+        "device_serial": "1234516789",
+        "ip_address": "192.168.0.1",
+        "version_number": 28
+      },
+      {
+        "content_id": "d0a5e5a5-cbe2-4f2a-a5b1-17e038cdc0de",
+        "date_accepted": "2024-10-24T11:44:46.979342Z",
+        "device_serial": "1234516789",
+        "ip_address": "192.168.0.1",
+        "version_number": 13
+      },
+      {
+        "content_id": "6185dec0-c5e7-4843-b286-4ea5e18a0cac",
+        "date_accepted": "2024-10-24T11:44:46.979360Z",
+        "device_serial": "1234516789",
+        "ip_address": "192.168.0.1",
+        "version_number": 14
+      },
+      {
+        "content_id": "9c6688e0-8297-4e8c-8918-e47fd3f067b5",
+        "date_accepted": "2024-10-24T11:44:46.979371Z",
+        "device_serial": "1234516789",
+        "ip_address": "192.168.0.1",
+        "version_number": 8
+      }
+    ]
+  },
+  "id": "42c19e7c-0ddb-369e-b6a6-9a66efa2b93a",
+  "legacy_data": {
+    "migrated": false
+  },
+  "preferences_data": {
+    "chatbot_enabled": false,
+    "code_scan_enabled": false,
+    "language": "en-US",
+    "notification": {
+      "mail": {
+        "state": "on",
+        "updated_at": "2024-10-24T11:44:46.980466Z"
+      },
+      "sms": {
+        "state": "on",
+        "updated_at": "2024-10-30T12:00:06Z"
+      },
+      "whatsapp": {
+        "state": "off",
+        "updated_at": "2024-10-30T12:00:06Z"
+      }
+    },
+    "offer_enabled": false,
+    "push_token": "",
+    "shopping_channel": [],
+    "year_summary_enabled": false
+  },
+  "profile_data": {
+    "birth_date": "1995-06-06",
+    "device_type": "mobile",
+    "first_name": "DogukanQA",
+    "gender": "others",
+    "last_name": "Yetisgin",
+    "last_name_2": "Dogru",
+    "login_count": 0,
+    "profile_completed": false,
+    "status": "Active",
+    "verified": true
+  },
+  "program_id": "kz",
+  "referral_code": "00000hdted",
+  "registration_data": {
+    "age_consent": false,
+    "created_at": "2024-10-30T12:00:06Z",
+    "profile_completed": false,
+    "sign_up_channel_type": 0,
+    "verified": true
+  },
+  "user_id": "905333393803"
+}]
