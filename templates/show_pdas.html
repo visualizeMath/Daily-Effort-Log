@@ -4,14 +4,23 @@
 <div class="container d-flex justify-content-center mt-2 mb-3">
     <h3>Task kayıtları</h3>
 </div>
-<div class="container d-flex justify-content-center col-md-3 mt-2 mb-1">
-    <div class="input-group mb-3">
-        <span class="input-group-text">
-            <i class="fa-solid fa-magnifying-glass"></i>
-        </span>
-        <input type="text" class="form-control" id="searchInput" placeholder="Ara .." aria-label="Search" autocomplete="off">
+<div class="row">
+
+    <div class="container d-flex justify-content-center col-md-3 mt-2 mb-1">
+        <div class="input-group mb-3">
+            <span class="input-group-text">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </span>
+            <input type="text" class="form-control" id="searchInput" placeholder="Ara .." aria-label="Search" autocomplete="off">
+        </div>
+    </div>
+    
+    <div class="container d-flex justify-content-end col-md-4 mt-2 mb-1">
+        <a href="{{ url_for('create_pdas_item') }}" class="btn btn-success rounded-pill"><i class="fa-solid fa-notes-medical me-2 mt-2"></i>Task Ekle</a>
     </div>
 </div>
+    
+
 <div class="container d-flex ms-5 mt-2">
     {% if not logs  %}
     <table class="table table-striped">
