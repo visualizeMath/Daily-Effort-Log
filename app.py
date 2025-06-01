@@ -493,6 +493,7 @@ def get_color(total_efor):
         return 'red'
     elif total_efor > 8:
         return 'orange'
+ 
 
 def get_tasks_of_day(given_date):
     conn=sqlite3.connect(db_path)
@@ -530,7 +531,10 @@ def get_sprints_with_active_tasks():
     conn= sqlite3.connect(db_path)
     cursor =conn.cursor()
 
-    cursor.execute('select max( bagli_sprint) from pdas where pdas_task_id BETWEEN 4114 and 5000')
+
+    # cursor.execute(10 max( bagli_sprint) from pdas where pdas_task_id BETWEEN 4114 and 5000')
+    cursor.execute('select distinct 10,11 from pdas where pdas_task_id')
+    
     available_sprints= cursor.fetchall()
     conn.close()
 
