@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="mt-2 mb-5 d-flex justify-content-center">
+    <h3>Sprint Oluştur</h3>
+</div>
+<div class="container col-8 d-flex justify-content-center border rounded border-0 alert" id="mainDivEnterTask" style="opacity: 0.94;">
+    <form method="post" action="{{ url_for('submit_new_sprint') }}">
+        <div class="row">
+            <div class="mb-3 col-4">
+                <label for="sprintNo" class="form-label fw-bold d-flex justify-content-start">Sprint No</label>
+                <select class="form-select" id="sprintNo" name="sprintNo" required>
+                    <!-- <option value="" disabled selected>No</option> -->
+                 
+                    <option value="11">11</option>
+                    <option value="12">12</option>
+                    <option value="13">13</option>
+                    <option value="14">14</option>
+                    <option value="15">15</option>
+                    <option value="16">16</option>
+                    <option value="17">17</option>
+                    <option value="18">18</option>
+                    <option value="19">19</option>
+                    <option value="20">20</option>
+                    <option value="21">21</option>
+                    <option value="22">22</option>
+                </select>
+            </div>
+
+            <!-- <div class="mb-3 col ms-2">
+                <label for="pdas_task_id" class="form-label fw-bold d-flex justify-content-start">Task No</label>
+                <input type="text" class="form-control" id="pdas_task_id" name="pdas_task_id" autocomplete="off" required >
+            </div> -->
+            <div class="row">
+                
+                <div class="mb-3 col-6">
+                    <label for="sprintStart" class="form-label fw-bold d-flex justify-content-start">Sprint Start</label>
+                    <input type="date" class="form-control" id="sprintStart" name="sprintStart" required>
+                </div>
+
+                <div class="mb-3 col-6">
+                    <label for="sprintEnd" class="form-label fw-bold d-flex justify-content-start">Sprint End</label>
+                    <input type="date" class="form-control" id="sprintEnd" name="sprintEnd" required>
+                </div>
+            </div>
+
+        </div>
+        
+           
+            
+            <!-- <div class="mb-3 col">
+                <label for="pdas_task_aciklama" class="form-label fw-bold d-flex justify-content-start">Task Açıklaması</label>
+                <input type="text" class="form-control" id="pdas_task_aciklama" name="pdas_task_aciklama" autocomplete="off" required>
+            </div> -->
+    <div class="mb-3 col">
+         <label for="isActiveSprint" class="form-label fw-bold d-flex justify-content-start">Is Active Sprint?</label>
+         <input type="checkbox" class="form-check-input" id="isActiveSprint" name="isActiveSprint" onchange="updateResult()">
+         <input type="hidden" id="isActive_Value" name="isActive_Value" value="No">
+    </div>
+        
+        <div class="container d-flex justify-content-center"><button type="submit" class="btn btn-primary fw-bolder">Kaydet</button></div>
+    </form>
+</div>
+
+<script>
+    var trh = document.getElementById('tarih');
+    if (trh != null) {
+        document.getElementById('tarih').addEventListener('change', function() {
+            var tarih = new Date(this.value);
+            var gunler = ['Pazar', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi'];
+            var gun = gunler[tarih.getDay()];
+            document.getElementById('gun').value = gun;
+        });
+    }
+        
+   
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    var today = new Date();
+    var day = String(today.getDate()).padStart(2,'0');
+    var month= String(today.getMonth()+1).padStart(2,'0');
+    var year = today.getFullYear();
+
+    var tarih = year+'-'+month+'-'+day;
+    
+    if(document.getElementById('tarih')!=null)
+    {
+        document.getElementById('tarih').value=tarih;
+    }
+
+    // var tarih = new Date(this.value);
+        var gunler = ['Pazar', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi'];
+        var gun = gunler[today.getDay()];
+        if(document.getElementById('gun')!=null)
+        {
+
+            document.getElementById('gun').value = gun;
+        }
+
+    });
+
+    function updateResult() {
+        const checkbox = document.getElementById('isActiveSprint');
+        const result = document.getElementById('isActive_Value');
+        result.value = checkbox.checked ? 'Yes' : 'No';
+}
+</script>
+{% endblock %}

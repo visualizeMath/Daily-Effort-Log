@@ -41,6 +41,13 @@ def init_db():
                     word_de TEXT
                 )''')
     
+    c.execute('''CREATE TABLE IF NOT EXISTS sprints (
+                    sprint_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    sprint_no TEXT,
+                    sprint_start TEXT,
+                    sprint_end TEXT,
+                    is_Active TEXT
+                )''')
     conn.commit()
     conn.close()
 
@@ -127,6 +134,10 @@ def get_taskname_for_selected_task(task_id):
 def create_pdas_item():
     return render_template('create_pdas_item.html')
 
+@app.route('/create_new_sprint')
+def create_new_sprint():
+    return render_template('create_sprint.html')
+
 @app.route('/submit_log', methods=['POST'])
 def submit_log():
     task_id = request.form['task_id']
@@ -201,6 +212,27 @@ def submit_pdas_task():
 
     return redirect(url_for('create_pdas_item'))
 
+@app.route('/submit_new_sprint', methods=['POST'])
+def submit_new_sprint():
+    sprintStart = request.form['sprintStart']
+    sprintEnd = request.form['sprintEnd']
+    sprintNo = request.form['sprintNo']
+    isActive = request.form['isActive_Value']
+
+    conn = sqlite3.connect(db_path)
+    c = conn.cursor()
+    c.execute('''INSERT INTO sprints (sprint_no, sprint_start, sprint_end,is_Active) 
+                 VALUES (?, ?, ?, ?)''', 
+                 (   sprintNo, sprintStart, sprintEnd,isActive ))
+    conn.commit()
+    conn.close()
+
+    if c.rowcount == 0:
+        flash(f'Sprint kaydedilemedi.', 'danger')
+    
+    flash(f'Sprint {sprintNo} kaydı girildi.', 'success')
+
+    return redirect(url_for('create_new_sprint'))
 
 @app.route('/show_logs',methods=['GET','POST'])
 def show_logs():
@@ -283,6 +315,17 @@ def show_pdas_items():
     pdas_logs = c.fetchall()
     conn.close()
     return render_template('show_pdas.html', logs=pdas_logs)
+
+@app.route('/show_sprints')
+def show_sprints():
+    conn = sqlite3.connect(db_path)
+    c = conn.cursor()
+    c.execute('SELECT * FROM sprints order by sprint_id desc')
+    sprints_all = c.fetchall()
+    print(sprints_all)
+    conn.close()
+    return render_template('show_sprints.html', sprints=sprints_all)
+
 
 #Delete the selected pdas task 
 @app.route('/delete_task', methods=['POST'])
