@@ -619,6 +619,23 @@ def get_sprints_with_active_tasks():
 
     return available_sprints
 
+@app.route('/update_task_aciklama', methods=['POST'])
+def update_task_aciklama():
+    data = request.get_json()
+    task_id = data.get('task_id')
+    new_text = data.get('new_text')
+
+    try:
+        conn = sqlite3.connect(db_path)
+        cursor = conn.cursor()
+        cursor.execute("UPDATE daily_log SET task_aciklama = ? WHERE id = ?", (new_text, task_id))
+        conn.commit()
+        conn.close()
+        return jsonify({'success': True})
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)})
+
+
 if __name__ == '__main__':
     # insert_vocab('templates/words.txt')
     app.run(debug=True)
