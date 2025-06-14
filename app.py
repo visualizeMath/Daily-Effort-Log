@@ -130,9 +130,9 @@ def get_taskname_for_selected_task(task_id):
     conn.close()    
     return task_name
 
-@app.route('/create_pdas_item')
-def create_pdas_item():
-    return render_template('create_pdas_item.html')
+@app.route('/create_new_task')
+def create_new_task():
+    return render_template('create_new_task.html')
 
 @app.route('/create_new_sprint')
 def create_new_sprint():
@@ -210,7 +210,7 @@ def submit_pdas_task():
         flash(f'PDAS kaydı kaydedilemedi.', 'danger')
     flash(f'{pdas_task_id} - {pdas_task_aciklama} PDAS kaydı girildi.', 'success')
 
-    return redirect(url_for('create_pdas_item'))
+    return redirect(url_for('create_new_task'))
 
 @app.route('/submit_new_sprint', methods=['POST'])
 def submit_new_sprint():
@@ -307,14 +307,14 @@ def get_current_month_name():
 #    print(turkish_number2month.get(cm))
    return turkish_number2month.get(cm)
 
-@app.route('/show_pdas_items')
-def show_pdas_items():
+@app.route('/show_tasks')
+def show_tasks():
     conn = sqlite3.connect(db_path)
     c = conn.cursor()
     c.execute('SELECT * FROM pdas order by id desc')
     pdas_logs = c.fetchall()
     conn.close()
-    return render_template('show_pdas.html', logs=pdas_logs)
+    return render_template('show_tasks.html', logs=pdas_logs)
 
 @app.route('/show_sprints')
 def show_sprints():
@@ -528,6 +528,9 @@ def summary():
         GROUP BY tarih
     """,(f'%.{current_month}.{current_year}',))
     rows = cursor.fetchall()
+    
+    print(f"Pattern used: %.{current_month}.{current_year}")
+    print("Fetched rows:", rows)
 
     # print(rows)
     related_efforts_of_day=[]
@@ -538,13 +541,13 @@ def summary():
         tarih, total_efor = row
         get_tasks_of_day(tarih)
         date_obj = datetime.strptime(tarih, '%d.%m.%Y')
-        if date_obj.weekday() < 5:  # Weekdays only
-            data.append({
-                'tarih': format_date(tarih),
-                'total_efor': total_efor,
-                'color': get_color(total_efor),
-                'related_efforts': get_tasks_of_day(tarih)
-            })
+        # if date_obj.weekday() < 5:  # Weekdays only
+        data.append({
+            'tarih': format_date(tarih),
+            'total_efor': total_efor,
+            'color': get_color(total_efor),
+            'related_efforts': get_tasks_of_day(tarih)
+        })
     
     conn.close()
 
@@ -559,7 +562,6 @@ def summary():
     word2practice=getword2practice()
     turkish_month_name=get_current_month_name()
 
-    print(str(current_month))
     return render_template('summary.html', rows_of_circles=rows_of_circles,word2practice=word2practice,turkish_month_name=turkish_month_name)
 
 # Determine the color of the circle based on total effort

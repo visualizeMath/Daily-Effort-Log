@@ -3,7 +3,6 @@
 {% block content %}
 
 
-
 <div class="container">
     <div class="container d-flex justify-content-center mt-0 py-0 mb-1" data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-html="true" title="<b>Güncel ayın eforlarını task kırılımlarıyla gösterir.. </b>">
         {% if turkish_month_name %}
@@ -32,7 +31,7 @@
                     <p class="mb-2 me-2 ms-2 font-monospace fs-5 fst-italic">{{word[1]}}</p>
                 </div>
             {% endfor %}
-                <!-- <p>word</p> -->
+                <p>word</p> -->
             <!-- {% endif %}
         </div> -->
       
@@ -55,7 +54,7 @@
         <p class="mb-0">İzinli</p>
 
     </div>
-
+    
      {%for row in rows_of_circles %}
     <div class="d-flex align-items-center ms-3 mt-2 pb-2"  style="border-bottom: 1px solid #ccc;">
     <div class="d-flex flex-wrap" style="flex-grow: 1;">
@@ -170,5 +169,7 @@
         });
     });
     </script>
+
+
     
 {% endblock %}
