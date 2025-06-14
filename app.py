@@ -619,8 +619,8 @@ def get_sprints_with_active_tasks():
 
     return available_sprints
 
-@app.route('/update_task_aciklama', methods=['POST'])
-def update_task_aciklama():
+@app.route('/update_effort_explanation', methods=['POST'])
+def update_effort_explanation():
     data = request.get_json()
     task_id = data.get('task_id')
     new_text = data.get('new_text')
@@ -628,7 +628,7 @@ def update_task_aciklama():
     try:
         conn = sqlite3.connect(db_path)
         cursor = conn.cursor()
-        cursor.execute("UPDATE daily_log SET task_aciklama = ? WHERE id = ?", (new_text, task_id))
+        cursor.execute("UPDATE daily_log SET yapilan_is = ? WHERE id = ?", (new_text, task_id))
         conn.commit()
         conn.close()
         return jsonify({'success': True})

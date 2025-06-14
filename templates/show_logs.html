@@ -111,10 +111,9 @@
                 <td class="col-2">{{ log[3] }}</td>
                 <td class="col-1">{{ log[4] }}</td>
                 <td class="col-1">{{ log[1] }}</td>
-                <!-- <td class="col-2">{{ log[2] }}</td> -->
-                 <td class="col-2 task-aciklama" contenteditable="false" data-task-id="{{ log[0] }}">{{ log[2] }}</td>
+                <td class="col-2">{{ log[2] }}</td>
 
-                <td class="col-5" id="log-{{ loop.index }}">{{ log[6] }}</td>
+                <td class="col-5 effort-detail" id="log-{{ loop.index }}" contenteditable="false" data-task-id="{{ log[0] }}">{{ log[6] }}</td>
                 <td class="col-1" id="hours">{{ log[5] }}</td>
                
                 <td class="col">
@@ -291,16 +290,25 @@ document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('.edit-btn').forEach(button => {
         button.addEventListener('click', function () {
             const row = this.closest('tr');
-            const cell = row.querySelector('.task-aciklama');
+            const cell = row.querySelector('.effort-detail');
             cell.setAttribute('contenteditable', 'true');
             cell.focus();
+
+            // Move cursor to end
+            const range = document.createRange();
+            const sel = window.getSelection();
+            range.selectNodeContents(cell);
+            range.collapse(false);  // Cursor to end
+            sel.removeAllRanges();
+            sel.addRange(range);
+
 
             // Add blur event if not already added
             cell.addEventListener('blur', function handleBlur() {
                 const newText = cell.textContent.trim();
                 const taskId = cell.getAttribute('data-task-id');
 
-                fetch('/update_task_aciklama', {
+                fetch('/update_effort_explanation', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
