@@ -327,7 +327,7 @@ def show_sprints():
     return render_template('show_sprints.html', sprints=sprints_all)
 
 
-#Delete the selected pdas task 
+#Delete the selected task 
 @app.route('/delete_task', methods=['POST'])
 def delete_task():
     data = request.json
@@ -359,6 +359,40 @@ def delete_task():
 
 
     return jsonify({'success': False, 'message': 'No entry found'}), 404
+
+#Delete the selected sprint 
+@app.route('/delete_sprint', methods=['POST'])
+def delete_sprint():
+    data = request.json
+    sprint_id = data.get('sprint_id')
+    
+    if not sprint_id:
+         
+        flash(f'{sprint_id} numaralı sprint bulunamadi.', 'danger')
+        return jsonify({"success": False, "error": "Sprint not provided."}), 400
+    
+    try:
+        # Connect to the database and delete the sprint
+        conn = sqlite3.connect(db_path)
+        cursor = conn.cursor()
+        
+        cursor.execute("DELETE FROM sprints WHERE sprint_no = ?", (sprint_id,))
+        conn.commit()
+        conn.close()
+
+        # Check if a row was actually deleted
+        if cursor.rowcount == 0:
+            flash(f'{sprint_id} numaralı sprint bulunamadi.', 'danger')
+            return jsonify({"success": False, "error": "Task not found."}), 404
+
+        flash(f'{sprint_id} numaralı sprint silindi.', 'success')
+        return jsonify({"success": True}), 200
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
+    return jsonify({'success': False, 'message': 'No entry found'}), 404
+
 
 #Find the downloads folder path depending on the os of the user
 # This path will be used to export the records
@@ -576,7 +610,7 @@ def get_sprints_with_active_tasks():
 
 
     # cursor.execute(10 max( bagli_sprint) from pdas where pdas_task_id BETWEEN 4114 and 5000')
-    cursor.execute('select distinct 10,11 from pdas where pdas_task_id')
+    cursor.execute('select max(sprint_no) from sprints where is_Active="Yes"')
     
     available_sprints= cursor.fetchall()
     conn.close()

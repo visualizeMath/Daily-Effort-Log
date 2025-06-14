@@ -63,7 +63,7 @@
             <td class="col-6">{{ sprint[2] }}</td>
             <td class="col-6">{{ sprint[3] }}</td>
             <td class="col d-flex align-items-center">{{ sprint[4] }}
-                <button type="button" class="btn p-0 border-0 btn-md delete-btn ms-5" data-task-id="{{ sprint[1] }}" style="color:red" data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-html="true" title="<b>Sil</b>">
+                <button type="button" class="btn p-0 border-0 btn-md delete-btn ms-5" sprint-id="{{ sprint[1] }}" style="color:red" data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-html="true" title="<b>Sil</b>">
                     <i class="fa-solid fa-trash"></i>
                 </button>
             </td>
@@ -99,13 +99,13 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
       var deleteButtons = document.querySelectorAll('.delete-btn');
-      var taskIDToDelete = null;
+      var sprintIDToDelete = null;
       var rowToDelete = null;
   
       deleteButtons.forEach(function(button) {
           button.addEventListener('click', function() {
               
-              taskIDToDelete = this.getAttribute('data-task-id');
+              sprintIDToDelete = this.getAttribute('sprint-id');
               rowToDelete = this.closest('tr');
               // Show the modal by setting the appropriate Bootstrap classes
               var deleteModal = document.getElementById('deleteConfirmationModal');
@@ -117,13 +117,13 @@
   
       // Handle the delete confirmation
       document.getElementById('confirmDeleteButton').addEventListener('click', function() {
-          if (taskIDToDelete && rowToDelete) {
-              fetch('/delete_task', {
+          if (sprintIDToDelete && rowToDelete) {
+              fetch('/delete_sprint', {
                   method: 'POST',
                   headers: {
                       'Content-Type': 'application/json',
                   },
-                  body: JSON.stringify({ task_id: taskIDToDelete })
+                  body: JSON.stringify({ sprint_id: sprintIDToDelete })
               })
               .then(response => {
                   if (!response.ok) {
@@ -137,7 +137,7 @@
                       rowToDelete.remove();
                       location.reload();
                   } else {
-                      alert("Failed to delete task: " + (data.error || 'Unknown error'));
+                      alert("Failed to delete sprint: " + (data.error || 'Unknown error'));
                   }
               })
               .catch(error => console.error('Error:', error));
