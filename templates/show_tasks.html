@@ -5,7 +5,7 @@
     <h3>Task kayıtları</h3>
 </div> -->
 <div class="container d-flex justify-content-center mt-0 mb-2">
-    {% if selected_sprint == 'Select' %}
+    {% if selected_sprint == 'All' %}
         <h3>Tüm Tasklar</h3>
     {% elif selected_sprint == '' %}
         <h3>Tüm Tasklar</h3>
@@ -20,11 +20,10 @@
                 <!-- <label for="filter_month" class="form-label">Ay</label> -->
                 <form action="/show_tasks" method="POST" id="sprintForm">
                     <select class="form-select" id="filter_sprint" name="filter_sprint" onchange="this.form.submit()">
-                        <option value="Select" {% if not selected_sprint %} selected {% endif %}>Select</option>
-                            <option value={{max_sprint}} {% if selected_sprint == max_sprint %}selected{% endif %}>{{max_sprint}}</option>
-                        <option value="{{ max_sprint - 1 }}"   {% if selected_sprint == (max_sprint - 1) %}selected{% endif %}>{{ max_sprint - 1 }}</option>
-                        <option value="{{ max_sprint - 2 }}"   {% if selected_sprint == (max_sprint - 2) %}selected{% endif %}>{{ max_sprint - 2 }}</option>
-                        <option value="{{ max_sprint - 3 }}"   {% if selected_sprint == (max_sprint - 3) %}selected{% endif %}>{{ max_sprint - 3 }}</option>
+                        <option value={{max_sprint}} {% if selected_sprint == max_sprint|string %}selected{% endif %}>{{max_sprint}}</option>
+                        <option value="{{ max_sprint - 1 }}"   {% if selected_sprint == (max_sprint - 1)|string %}selected{% endif %}>{{ max_sprint - 1 }}</option>
+                        <option value="{{ max_sprint - 2 }}"   {% if selected_sprint == (max_sprint - 2)|string %}selected{% endif %}>{{ max_sprint - 2 }}</option>
+                        <option value="Select" {% if not selected_sprint %} selected {% endif %}>All</option>
             
                     </select>
                 </form>
