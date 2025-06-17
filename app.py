@@ -1,3 +1,4 @@
+from collections import OrderedDict
 from datetime import datetime
 from flask import Flask, flash, jsonify, render_template, request, redirect, url_for
 import sqlite3
@@ -132,11 +133,27 @@ def get_taskname_for_selected_task(task_id):
 
 @app.route('/create_new_task')
 def create_new_task():
-    return render_template('create_new_task.html')
+    conn = sqlite3.connect(db_path)
+    c = conn.cursor()
+
+    c.execute('SELECT max(sprint_no) son_sprint from sprints')
+    max_sprint=c.fetchone()
+
+    return render_template('create_new_task.html',max_sprint=int(max_sprint[0]))
 
 @app.route('/create_new_sprint')
 def create_new_sprint():
-    return render_template('create_sprint.html')
+    conn = sqlite3.connect(db_path)
+    c = conn.cursor()
+
+    c.execute('SELECT max(sprint_no) son_sprint from sprints')
+    max_sprint=c.fetchone()
+    # print(f'Gelen deger: {max_sprint}')
+    if max_sprint and max_sprint[0]!= None :
+        return render_template('create_sprint.html',max_sprint=int(max_sprint[0]))
+    else:
+        return render_template('create_sprint.html',max_sprint=11)
+    
 
 @app.route('/submit_log', methods=['POST'])
 def submit_log():
@@ -311,13 +328,12 @@ def get_current_month_name():
 def show_tasks():
     conn = sqlite3.connect(db_path)
     c = conn.cursor()
-    print(request.method)
 
-    c.execute('SELECT max(bagli_sprint) son_sprint from pdas where id>190')
+    c.execute('SELECT max(sprint_no) son_sprint from sprints')
     max_sprint=c.fetchone()
 
     if max_sprint is not None and max_sprint[0]:
-        print(f'max_sprint:{max_sprint[0]}')
+        # print(f'max_sprint:{max_sprint[0]}')
         selected_sprint=max_sprint[0]
 
     if request.method=='POST':
@@ -580,8 +596,8 @@ def summary():
     """,(f'%.{current_month}.{current_year}',))
     rows = cursor.fetchall()
     
-    print(f"Pattern used: %.{current_month}.{current_year}")
-    print("Fetched rows:", rows)
+    # print(f"Pattern used: %.{current_month}.{current_year}")
+    # print("Fetched rows:", rows)
 
     # print(rows)
     related_efforts_of_day=[]
@@ -596,12 +612,34 @@ def summary():
         data.append({
             'tarih': format_date(tarih),
             'total_efor': total_efor,
+            'date_obj':date_obj,
+            'week': date_obj.isocalendar()[1],
             'color': get_color(total_efor),
             'related_efforts': get_tasks_of_day(tarih)
         })
     
     conn.close()
+    # group by week number in order
+    weeks = OrderedDict()
+    for item in sorted(data, key=lambda x: x['date_obj']):
+        weeks.setdefault(item['week'], []).append(item)
 
+    # build rows_of_weeks
+    rows_of_weeks = []
+    for week_no, items in weeks.items():
+        row_total = sum(i['total_efor'] for i in items)
+        rows_of_weeks.append({
+            'week_no': week_no,
+            'circles': items,
+            'row_total': row_total
+        })
+
+    return render_template(
+        'summary.html',
+        rows_of_weeks=rows_of_weeks,
+        turkish_month_name=get_current_month_name()
+    )
+'''
     # Group into rows of 5 items per row
     # rows_of_circles = [data[i:i + 5] for i in range(0, len(data), 5)]
     rows_of_circles = []
@@ -610,10 +648,11 @@ def summary():
         row_total = sum(item['total_efor'] for item in row_data)
         rows_of_circles.append({'circles': row_data, 'row_total': row_total})
 
-    word2practice=getword2practice()
+    # word2practice=getword2practice()
     turkish_month_name=get_current_month_name()
 
-    return render_template('summary.html', rows_of_circles=rows_of_circles,word2practice=word2practice,turkish_month_name=turkish_month_name)
+    return render_template('summary.html', rows_of_circles=rows_of_circles,turkish_month_name=turkish_month_name)
+'''
 
 # Determine the color of the circle based on total effort
 def get_color(total_efor):

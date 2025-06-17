@@ -54,9 +54,48 @@
         <p class="mb-0">İzinli</p>
 
     </div>
-    
-     {%for row in rows_of_circles %}
-    <div class="d-flex align-items-center ms-3 mt-2 pb-2"  style="border-bottom: 1px solid #ccc;">
+
+      {% for row in rows_of_weeks %}
+    <div class="mb-4">
+      <div class="d-flex align-items-center mb-1">
+        <h5 class="me-3">Hafta {{ row.week_no }}</h5>
+        <div class="total h5" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true"
+             title="<b>{{row.week_no}}. Hafta toplam efor (saat) </b>">
+          {{ row.row_total }}
+        </div>
+      </div>
+      <div class="d-flex flex-wrap align-items-center">
+        {% for item in row.circles %}
+          <div id="detailforday-{{ item.tarih }}"
+               class="detailforday rounded mb-0 mt-0 ms-2 me-2"
+               style="display: none; position: absolute; z-index:200;">
+               {% for e in item.related_efforts  %}
+                     <div class="d-flex ms-2 me-2 mt-3 pb-0 px-1">
+                         
+                            <p class="fw-bolder mb-1">
+                                    <span class="badge bg-primary rounded-pill fs-7">
+                                    {{e[5]}}</span></p>
+                             <p class="fw-bold font-monospace fs-6 ms-4 mb-2">{{e[1]}} : {{e[2]}}</p>
+                            </div>
+                            <p class="fw-normal font-monospace fs-6 ms-3 mb-1 pb-1 me-1">{{ e[6] }}</p>
+                            {% if not loop.last %}
+                                <hr class="mb-1 mt-1">
+                            {% endif %}
+                    
+                {%  endfor %}
+          </div>
+          <div class="circle {{ item.color }} me-3 mb-2"
+               data-tarih="{{ item.tarih }}">
+            <div>{{ item.tarih }}<br>{{ item.total_efor }}</div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  {% endfor %}
+</div>
+<!--     
+     {%for row in rows_of_weeks %}
+    <div class="d-flex align-items-center ms-3 mt-2 pb-2"  style="border-bottom: 1px solid #ccc;"> 
     <div class="d-flex flex-wrap" style="flex-grow: 1;">
             {% for item in row.circles %}
             <div id="detailforday-{{ item.tarih }}" class="detailforday rounded mb-0 mt-0 ms-2 me-2" style="display: none;">
@@ -87,6 +126,7 @@
     </div>
     {% endfor %}
 </div>
+-->
 
 
 
