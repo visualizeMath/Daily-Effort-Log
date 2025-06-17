@@ -307,14 +307,57 @@ def get_current_month_name():
 #    print(turkish_number2month.get(cm))
    return turkish_number2month.get(cm)
 
-@app.route('/show_tasks')
+@app.route('/show_tasks',methods=['GET','POST'])
 def show_tasks():
     conn = sqlite3.connect(db_path)
     c = conn.cursor()
-    c.execute('SELECT * FROM pdas order by id desc')
-    pdas_logs = c.fetchall()
-    conn.close()
-    return render_template('show_tasks.html', logs=pdas_logs)
+    print(request.method)
+
+    c.execute('SELECT max(bagli_sprint) son_sprint from pdas where id>190')
+    max_sprint=c.fetchone()
+
+    if max_sprint is not None and max_sprint[0]:
+        print(f'max_sprint:{max_sprint[0]}')
+        selected_sprint=max_sprint[0]
+
+    if request.method=='POST':
+        print(f'Method: {request.method}')
+        selected_sprint= request.form.get('filter_sprint')
+
+        print(f'selected_sprint:{selected_sprint}')
+
+        if (selected_sprint!='' and selected_sprint and selected_sprint!='Select'):
+
+            query = "SELECT * FROM pdas WHERE bagli_sprint = ? ORDER BY id DESC"
+            c.execute(query, (selected_sprint,))
+
+        elif selected_sprint=='Select' :
+            c.execute('SELECT * FROM pdas ORDER BY id DESC')
+        
+        tasks = c.fetchall()
+        conn.close()
+
+        return render_template('show_tasks.html', tasks=tasks,selected_sprint=selected_sprint,max_sprint=int(max_sprint[0]))
+    else:
+        print(f'Method:GET')
+        
+        if (selected_sprint=='' or selected_sprint=='Select' ) and max_sprint is not None and max_sprint[0]:
+            selected_sprint=max_sprint[0]
+            print('max_sprint atamasi yapildi')
+        
+        query = "SELECT * FROM pdas WHERE bagli_sprint = ? ORDER BY id DESC"
+        c.execute(query, (selected_sprint,))
+        
+        tasks = c.fetchall()
+    
+        conn.close()
+        return render_template('show_tasks.html', tasks=tasks,selected_sprint=selected_sprint,max_sprint=int(max_sprint[0]))
+    
+    # c.execute('SELECT * FROM pdas order by id desc')
+    # pdas_logs = c.fetchall()
+
+    # conn.close()
+    # return render_template('show_tasks.html', logs=pdas_logs,max_sprint=max_sprint)
 
 @app.route('/show_sprints')
 def show_sprints():
