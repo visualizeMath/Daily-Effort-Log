@@ -7,10 +7,18 @@ import pandas as pd
 import random
 import os
 from pathlib import Path
+from routes.delete_sprint import delete_sprint_bp
+from routes.create_sprint import create_sprint_bp
+from routes.create_task import create_task_bp
 
 app = Flask(__name__)
 
 app.secret_key = secrets.token_hex(16)
+
+# Registering the blueprint with main Flask app
+app.register_blueprint(delete_sprint_bp)
+app.register_blueprint(create_sprint_bp)
+app.register_blueprint(create_task_bp)
 
 # db_path = '/app/data/daily_log.db'
 db_path = 'daily_log.db'
@@ -131,29 +139,7 @@ def get_taskname_for_selected_task(task_id):
     conn.close()    
     return task_name
 
-@app.route('/create_new_task')
-def create_new_task():
-    conn = sqlite3.connect(db_path)
-    c = conn.cursor()
 
-    c.execute('SELECT max(sprint_no) son_sprint from sprints')
-    max_sprint=c.fetchone()
-
-    return render_template('create_new_task.html',max_sprint=int(max_sprint[0]))
-
-@app.route('/create_new_sprint')
-def create_new_sprint():
-    conn = sqlite3.connect(db_path)
-    c = conn.cursor()
-
-    c.execute('SELECT max(sprint_no) son_sprint from sprints')
-    max_sprint=c.fetchone()
-    # print(f'Gelen deger: {max_sprint}')
-    if max_sprint and max_sprint[0]!= None :
-        return render_template('create_sprint.html',max_sprint=int(max_sprint[0]))
-    else:
-        return render_template('create_sprint.html',max_sprint=11)
-    
 
 @app.route('/submit_log', methods=['POST'])
 def submit_log():
@@ -227,7 +213,7 @@ def submit_pdas_task():
         flash(f'PDAS kaydı kaydedilemedi.', 'danger')
     flash(f'{pdas_task_id} - {pdas_task_aciklama} PDAS kaydı girildi.', 'success')
 
-    return redirect(url_for('create_new_task'))
+    return redirect(url_for('create_task_bp.create_new_task'))
 
 @app.route('/submit_new_sprint', methods=['POST'])
 def submit_new_sprint():
@@ -249,7 +235,7 @@ def submit_new_sprint():
     
     flash(f'Sprint {sprintNo} kaydı girildi.', 'success')
 
-    return redirect(url_for('create_new_sprint'))
+    return redirect(url_for('create_sprint_bp.create_new_sprint'))
 
 @app.route('/show_logs',methods=['GET','POST'])
 def show_logs():
@@ -426,36 +412,6 @@ def delete_task():
 
 
     return jsonify({'success': False, 'message': 'No entry found'}), 404
-
-#Delete the selected sprint 
-@app.route('/delete_sprint', methods=['POST'])
-def delete_sprint():
-    data = request.json
-    sprint_id = data.get('sprint_id')
-    
-    if not sprint_id:
-         
-        flash(f'{sprint_id} numaralı sprint bulunamadi.', 'danger')
-        return jsonify({"success": False, "error": "Sprint not provided."}), 400
-    
-    try:
-        # Connect to the database and delete the sprint
-        conn = sqlite3.connect(db_path)
-        cursor = conn.cursor()
-        
-        cursor.execute("DELETE FROM sprints WHERE sprint_no = ?", (sprint_id,))
-        conn.commit()
-        conn.close()
-
-        # Check if a row was actually deleted
-        if cursor.rowcount == 0:
-            flash(f'{sprint_id} numaralı sprint bulunamadi.', 'danger')
-            return jsonify({"success": False, "error": "Task not found."}), 404
-
-        flash(f'{sprint_id} numaralı sprint silindi.', 'success')
-        return jsonify({"success": True}), 200
-    except Exception as e:
-        return jsonify({"success": False, "error": str(e)}), 500
 
 
     return jsonify({'success': False, 'message': 'No entry found'}), 404

@@ -1,0 +1,1 @@
+db_path = 'daily_log.db'
