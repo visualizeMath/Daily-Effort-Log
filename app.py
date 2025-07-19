@@ -10,6 +10,15 @@ from pathlib import Path
 from routes.delete_sprint import delete_sprint_bp
 from routes.create_sprint import create_sprint_bp
 from routes.create_task import create_task_bp
+from routes.show_tasks import show_tasks_bp
+from routes.show_sprints import show_sprints_bp
+from routes.show_logs import show_logs_bp
+
+from global_vars import turkish_month_map
+from global_vars import turkish_number2month
+from global_vars import get_current_month_name
+from global_vars import get_current_month
+from global_vars import get_current_year
 
 app = Flask(__name__)
 
@@ -19,6 +28,9 @@ app.secret_key = secrets.token_hex(16)
 app.register_blueprint(delete_sprint_bp)
 app.register_blueprint(create_sprint_bp)
 app.register_blueprint(create_task_bp)
+app.register_blueprint(show_tasks_bp)
+app.register_blueprint(show_sprints_bp)
+app.register_blueprint(show_logs_bp)
 
 # db_path = '/app/data/daily_log.db'
 db_path = 'daily_log.db'
@@ -77,6 +89,7 @@ def enter_log():
     # print(active_sprints[0])
     return render_template('enter_log.html', task_ids=[],active_sprints=active_sprints)
 @app.route('/get_dependent_tasks',methods=['POST'])
+
 def get_dependent_tasks():
     try:
         data = request.json
@@ -237,148 +250,6 @@ def submit_new_sprint():
 
     return redirect(url_for('create_sprint_bp.create_new_sprint'))
 
-@app.route('/show_logs',methods=['GET','POST'])
-def show_logs():
-
-    selected_month=get_current_month_name()
-    conn = sqlite3.connect(db_path)
-    c = conn.cursor()
-
-    if request.method=='GET':
-        month_no = get_current_month()
-        c.execute('SELECT * FROM daily_log WHERE tarih like ? ORDER BY id DESC', ('%.{}.%'.format(month_no),))
-
-        # c.execute('SELECT * FROM daily_log ORDER BY id DESC')
-
-    if request.method=='POST':
-
-        selected_month= request.form.get('filter_month')
-
-        if (selected_month!='' and selected_month and selected_month!='Select'):
-            
-            month_number = turkish_month_map.get(selected_month)
-            # print('2.month_number : '+ month_number)
-            # query = "SELECT * FROM daily_log WHERE Tarih LIKE ? Order by id desc"
-            # c.execute(query, ('%.{}.%'.format(month_value),))
-            query = "SELECT * FROM daily_log WHERE tarih like ? ORDER BY id DESC"
-            c.execute(query, ('%.{}.%'.format(month_number),))
-
-        elif selected_month=='Select' :
-            c.execute('SELECT * FROM daily_log ORDER BY id DESC')
-
-    logs = c.fetchall()
-    # c.execute('SELECT * FROM daily_log order by tarih desc')
-  
-    conn.close()
-    return render_template('show_logs.html', logs=logs,selected_month=selected_month)
-
-turkish_month_map = {
-    "Ocak": "01",
-    "Şubat": "02",
-    "Mart": "03",
-    "Nisan": "04",
-    "Mayıs": "05",
-    "Haziran": "06",
-    "Temmuz": "07",
-    "Ağustos": "08",
-    "Eylül": "09",
-    "Ekim": "10",
-    "Kasım": "11",
-    "Aralık": "12"
-}
-
-turkish_number2month = {
-    "01":"Ocak",
-    "02":"Şubat",
-    "03":"Mart",
-    "04":"Nisan",
-    "05":"Mayıs",
-    "06":"Haziran",
-    "07":"Temmuz",
-    "08":"Ağustos",
-    "09":"Eylül",
-    "10":"Ekim",
-    "11":"Kasım", 
-    "12":"Aralık"
-}
-
-def get_current_month_name():
-   dtn=datetime.now()
-   cm=dtn.strftime("%m")
-
-#    print(cm)
-#    print(turkish_number2month.get(cm))
-   return turkish_number2month.get(cm)
-
-@app.route('/show_tasks',methods=['GET','POST'])
-def show_tasks():
-    conn = sqlite3.connect(db_path)
-    c = conn.cursor()
-
-    c.execute('SELECT max(sprint_no) son_sprint from sprints')
-    max_sprint=c.fetchone()
-
-    if max_sprint is not None and max_sprint[0]:
-        # print(f'max_sprint:{max_sprint[0]}')
-        selected_sprint=max_sprint[0]
-
-    if request.method=='POST':
-        # print(f'Method: {request.method}')
-        selected_sprint= request.form.get('filter_sprint')
-        
-        print(f'selected_sprint:{selected_sprint}')
-
-        if selected_sprint == "Select":
-            selected_sprint = 'All'
-
-        if (selected_sprint!='' and selected_sprint and selected_sprint!='All'):
-
-            query = "SELECT * FROM pdas WHERE bagli_sprint = ? ORDER BY id DESC"
-            c.execute(query, (selected_sprint,))
-
-        elif selected_sprint=='All' :
-            c.execute('SELECT * FROM pdas ORDER BY id DESC')
-        
-        tasks = c.fetchall()
-        conn.close()
-
-        return render_template('show_tasks.html', tasks=tasks,selected_sprint=selected_sprint,max_sprint=int(max_sprint[0]))
-    else:
-        # print(f'selected ilk : {selected_sprint}')
-         qs = request.args.get("filter_sprint")
-         
-         if qs and qs != "All":
-            selected_sprint = qs
-         else:
-            selected_sprint = max_sprint[0]
-
-        # if (selected_sprint=='' or selected_sprint=='All' ) and max_sprint is not None and max_sprint[0]:
-        #     selected_sprint=max_sprint[0]
-        
-         query = "SELECT * FROM pdas WHERE bagli_sprint = ? ORDER BY id DESC"
-         c.execute(query, (selected_sprint,))
-        
-         tasks = c.fetchall()
-    
-         conn.close()
-         return render_template('show_tasks.html', tasks=tasks,selected_sprint=selected_sprint,max_sprint=int(max_sprint[0]))
-    
-    # c.execute('SELECT * FROM pdas order by id desc')
-    # pdas_logs = c.fetchall()
-
-    # conn.close()
-    # return render_template('show_tasks.html', logs=pdas_logs,max_sprint=max_sprint)
-
-@app.route('/show_sprints')
-def show_sprints():
-    conn = sqlite3.connect(db_path)
-    c = conn.cursor()
-    c.execute('SELECT * FROM sprints order by sprint_id desc')
-    sprints_all = c.fetchall()
-    print(sprints_all)
-    conn.close()
-    return render_template('show_sprints.html', sprints=sprints_all)
-
 
 #Delete the selected task 
 @app.route('/delete_task', methods=['POST'])
@@ -521,15 +392,6 @@ def format_date(tarih):
     }
     return f"{day} {turkish_months[month_name]}"
 
-def get_current_month():
-    dtn=datetime.now()
-    cm=dtn.strftime("%m")
-    return cm
-
-def get_current_year():
-    dtn=datetime.now()
-    cy=dtn.strftime("%Y")
-    return cy
 
 # Route to generate the summary report
 @app.route('/summary')
