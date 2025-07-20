@@ -13,6 +13,8 @@ from routes.create_task import create_task_bp
 from routes.show_tasks import show_tasks_bp
 from routes.show_sprints import show_sprints_bp
 from routes.show_logs import show_logs_bp
+from routes.submit_sprint import submit_sprint_bp
+from routes.delete_task import delete_task_bp
 
 from global_vars import turkish_month_map
 from global_vars import turkish_number2month
@@ -31,6 +33,8 @@ app.register_blueprint(create_task_bp)
 app.register_blueprint(show_tasks_bp)
 app.register_blueprint(show_sprints_bp)
 app.register_blueprint(show_logs_bp)
+app.register_blueprint(submit_sprint_bp)
+app.register_blueprint(delete_task_bp)
 
 # db_path = '/app/data/daily_log.db'
 db_path = 'daily_log.db'
@@ -227,65 +231,6 @@ def submit_pdas_task():
     flash(f'{pdas_task_id} - {pdas_task_aciklama} PDAS kaydı girildi.', 'success')
 
     return redirect(url_for('create_task_bp.create_new_task'))
-
-@app.route('/submit_new_sprint', methods=['POST'])
-def submit_new_sprint():
-    sprintStart = request.form['sprintStart']
-    sprintEnd = request.form['sprintEnd']
-    sprintNo = request.form['sprintNo']
-    isActive = request.form['isActive_Value']
-
-    conn = sqlite3.connect(db_path)
-    c = conn.cursor()
-    c.execute('''INSERT INTO sprints (sprint_no, sprint_start, sprint_end,is_Active) 
-                 VALUES (?, ?, ?, ?)''', 
-                 (   sprintNo, sprintStart, sprintEnd,isActive ))
-    conn.commit()
-    conn.close()
-
-    if c.rowcount == 0:
-        flash(f'Sprint kaydedilemedi.', 'danger')
-    
-    flash(f'Sprint {sprintNo} kaydı girildi.', 'success')
-
-    return redirect(url_for('create_sprint_bp.create_new_sprint'))
-
-
-#Delete the selected task 
-@app.route('/delete_task', methods=['POST'])
-def delete_task():
-    data = request.json
-    task_id = data.get('task_id')
-    
-    if not task_id:
-         
-        flash(f'{task_id} numaralı PDAS taskı bulunamadi.', 'danger')
-        return jsonify({"success": False, "error": "Task ID not provided."}), 400
-    
-    try:
-        # Connect to the database and delete the task
-        conn = sqlite3.connect(db_path)
-        cursor = conn.cursor()
-        
-        cursor.execute("DELETE FROM pdas WHERE pdas_task_id = ?", (task_id,))
-        conn.commit()
-        conn.close()
-
-        # Check if a row was actually deleted
-        if cursor.rowcount == 0:
-            flash(f'{task_id} numaralı PDAS taskı bulunamadi.', 'danger')
-            return jsonify({"success": False, "error": "Task not found."}), 404
-
-        flash(f'{task_id} numaralı PDAS taskı silindi.', 'success')
-        return jsonify({"success": True}), 200
-    except Exception as e:
-        return jsonify({"success": False, "error": str(e)}), 500
-
-
-    return jsonify({'success': False, 'message': 'No entry found'}), 404
-
-
-    return jsonify({'success': False, 'message': 'No entry found'}), 404
 
 
 #Find the downloads folder path depending on the os of the user
