@@ -18,6 +18,7 @@ from routes.delete_task import delete_task_bp
 from routes.get_dependent_tasks import get_dependent_task_bp
 from routes.delete_log import delete_log_bp
 from routes.enter_log import enter_log_bp
+from routes.activate_sprint import activate_sprint_bp
 
 from global_vars import turkish_month_map
 from global_vars import turkish_number2month
@@ -43,6 +44,7 @@ app.register_blueprint(delete_task_bp)
 app.register_blueprint(get_dependent_task_bp)
 app.register_blueprint(delete_log_bp)
 app.register_blueprint(enter_log_bp)
+app.register_blueprint(activate_sprint_bp)
 
 db_path = 'daily_log.db'
 

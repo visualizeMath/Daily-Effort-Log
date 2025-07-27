@@ -63,6 +63,9 @@
             <td class="col-6">{{ sprint[2] }}</td>
             <td class="col-6">{{ sprint[3] }}</td>
             <td class="col d-flex align-items-center">{{ sprint[4] }}
+                <button type="button" class="btn p-0 border-0 btn-md update-btn ms-5" sprint-id="{{ sprint[1] }}" style="color:gray" data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-html="true" title="<b>Güncelle</b>">
+                    <i class="fa-solid fa-rotate"></i>
+                </button>
                 <button type="button" class="btn p-0 border-0 btn-md delete-btn ms-5" sprint-id="{{ sprint[1] }}" style="color:red" data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-html="true" title="<b>Sil</b>">
                     <i class="fa-solid fa-trash"></i>
                 </button>
@@ -86,6 +89,24 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
           <button type="button" class="btn btn-danger" id="confirmDeleteButton">SİL</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="updateConfirmationModal" tabindex="-1" aria-labelledby="updateConfirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="updateConfirmationModalLabel">Sprinti Aktifleştir</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Seçilen sprint aktifleştirilecek. Onaylıyor musunuz?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+          <button type="button" class="btn btn-success" id="confirmUpdateButton">Aktifleştir</button>
         </div>
       </div>
     </div>
@@ -160,8 +181,72 @@
           });
       });
   });
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var updateButtons = document.querySelectorAll('.update-btn');
+      var sprintIDToUpdate = null;
+      var rowToUpdate= null;
+  
+      updateButtons.forEach(function(button) {
+          button.addEventListener('click', function() {
+              
+              sprintIDToUpdate = this.getAttribute('sprint-id');
+              rowToUpdate = this.closest('tr');
+              // Show the modal by setting the appropriate Bootstrap classes
+              var updateModal = document.getElementById('updateConfirmationModal');
+              updateModal.classList.add('show');
+              updateModal.style.display = 'block';
+              document.body.classList.add('modal-open');
+          });
+      });
+  
+      // Handle the update confirmation
+      document.getElementById('confirmUpdateButton').addEventListener('click', function() {
+          if (sprintIDToUpdate && rowToUpdate) {
+              fetch('/activate_sprint', {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({ sprint_id: sprintIDToUpdate })
+              })
+              .then(response => {
+                  if (!response.ok) {
+                      throw new Error('Network response was not ok');
+                  }
+                  return response.json();
+              })
+              .then(data => {
+                  if (data.success) {                                            
+                      location.reload();
+                  } else {
+                      alert("Failed to delete sprint: " + (data.error || 'Unknown error'));
+                  }
+              })
+              .catch(error => console.error('Error:', error));
+          }
+  
+          // Hide the modal after the operation
+          var updateModal = document.getElementById('updateConfirmationModal');
+          updateModal.classList.remove('show');
+          updateModal.style.display = 'none';
+          document.body.classList.remove('modal-open');
+      });
+  
+      // Handle closing the modal with the "Cancel" button or the close button
+      document.querySelectorAll('.btn-close, .btn-secondary').forEach(function(button) {
+          button.addEventListener('click', function() {
+              var updateModal = document.getElementById('updateConfirmationModal');
+              updateModal.classList.remove('show');
+              updateModal.style.display = 'none';
+              document.body.classList.remove('modal-open');
+          });
+      });
+  });
   </script>
- 
+
  <script>
     document.getElementById('searchInput').addEventListener('keyup', function() {
         var searchValue = this.value.toLowerCase();
