@@ -12,7 +12,7 @@ def create_new_sprint():
 
     c.execute('SELECT max(sprint_no) son_sprint from sprints')
     max_sprint = c.fetchone()
-    if max_sprint and max_sprint[0] is not None: # Use 'is not None' for clarity
+    if max_sprint and max_sprint[0] is not None:
         return render_template('create_sprint.html', max_sprint=int(max_sprint[0]))
     else:
         return render_template('create_sprint.html', max_sprint=11)

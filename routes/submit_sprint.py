@@ -16,6 +16,10 @@ def submit_new_sprint():
     c.execute('''INSERT INTO sprints (sprint_no, sprint_start, sprint_end,is_Active) 
                  VALUES (?, ?, ?, ?)''', 
                  (   sprintNo, sprintStart, sprintEnd,isActive ))
+    if isActive.lower()=='yes':
+        c.execute('''UPDATE sprints SET is_Active='No' where sprint_no <> ?'''
+              ,(sprintNo,)
+              )
     conn.commit()
     conn.close()
 
