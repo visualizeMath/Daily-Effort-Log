@@ -17,6 +17,12 @@
             background-color: #333333;
             color: #ffffff;
         }
+        
+        /* .today-btn.dark-mode {
+            background-color: #333333;
+            color: #ffffff;
+        } */
+
         .table-striped>tbody>tr:nth-of-type(odd).dark-mode {
             background-color: #333333;
         }
@@ -202,6 +208,8 @@
             var mdl = document.getElementsByClassName('modal-content');
             var mf = document.getElementById('mainDivEnterLog');
             var mdw = document.getElementById('mainDivWords');
+            var todaybtn = document.getElementById('today');
+            var yesterdaybtn = document.getElementById('yesterday');
             var mdet = document.getElementById('mainDivEnterTask');
             var listItems = document.getElementsByClassName('list-group-item');
             var detailfordays = document.getElementsByClassName('detailforday');
@@ -275,6 +283,23 @@
                     }
                 }
 
+                if (todaybtn !=null && todaybtn.length>0)
+                {
+                    if (todaybtn.classList.contains('text-dark')) {
+                        todaybtn.classList.remove('text-dark');
+                    }
+                   
+                }
+
+                
+                if (yesterdaybtn !=null && yesterdaybtn.length>0)
+                {
+                    if (yesterdaybtn.classList.contains('text-dark')) {
+                        yesterdaybtn.classList.remove('text-dark');
+                    }
+                   
+                }
+
                 if (mdet!=null && mdet.length>0)
                 {
                     if (mdet.classList.contains('alert-light')) {
@@ -301,6 +326,17 @@
                 {
                     mf.classList.remove('alert-light');
                 }
+
+                  if(todaybtn && todaybtn.hasChildNodes() && todaybtn.classList.contains('alert-light'))
+                {
+                    todaybtn.classList.remove('alert-light');
+                }
+
+                if(yesterdaybtn && yesterdaybtn.hasChildNodes() && yesterdaybtn.classList.contains('alert-light'))
+                {
+                    yesterdaybtn.classList.remove('alert-light');
+                }
+
                 if(mdw && mdw.hasChildNodes() && mdw.classList.contains('alert-light'))
                 {
                     mdw.classList.remove('alert-light');
@@ -379,6 +415,31 @@
                         }
 
                     }
+
+                    var td_dark = document.getElementById('today');
+                    if(td_dark!=null)
+                    {
+                        if(td_dark.classList!=null)
+                        {
+                            if(!td_dark.classList.contains('alert-light')) {
+                                td_dark.classList.add('alert-light');               
+                            }  
+                        }
+
+                    }
+
+                    var yd_dark = document.getElementById('yesterday');
+                    if(yd_dark!=null)
+                    {
+                        if(yd_dark.classList!=null)
+                        {
+                            if(!yd_dark.classList.contains('alert-light')) {
+                                yd_dark.classList.add('alert-light');               
+                            }  
+                        }
+
+                    }
+
                     var mdet = document.getElementById('mainDivEnterTask');
                     if(mdet!=null)
                     {
@@ -420,6 +481,7 @@
                             mf.classList.add('alert-light');
                         }
                     }
+
                     if (mdet != null && mdet.length>0){
                         if ( mdet.hasChildNodes() && !mdet.classList.contains('alert-light')) {
                             mdet.classList.add('alert-light');
@@ -438,6 +500,22 @@
                         dm_toggler.classList.add('btn-secondary');
                     } 
                 }
+
+
+                 if (todaybtn != null && todaybtn.length>0 && todaybtn.classList!=null){
+
+                        if ( todaybtn.classList.contains('bg-dark')) {
+                             todaybtn.classList.remove('bg-dark');
+                        }
+                 }
+
+                   if (yesterdaybtn != null && yesterdaybtn.length>0 && yesterdaybtn.classList!=null){
+
+                        if ( yesterdaybtn.classList.contains('bg-dark')) {
+                             yesterdaybtn.classList.remove('bg-dark');
+                        }
+                   }
+                    
 
                 if(moonicon !=null && moonicon.classList!=null)
                 {
@@ -483,11 +561,24 @@
             }
 
             var mf = document.getElementById('mainDivEnterLog');
+            var today_button = document.getElementById('today');
+            var yesterday_button = document.getElementById('yesterday');
+
             var mdw = document.getElementById('mainDivWords');
 
             if (mf !=null){
                 mf.classList.toggle('dark-mode');
             }
+
+            
+            if (today_button !=null){
+                today_button.classList.toggle('dark-mode');
+            }
+
+             if (yesterday_button !=null){
+                yesterday_button.classList.toggle('dark-mode');
+             }
+
             if (mdw !=null){
                 mdw.classList.toggle('dark-mode');
             }

@@ -33,7 +33,7 @@
                     </select>
                 </form>
             </div>
-            <div class="col-md-3 mb-3 d-flex justify-content-center" id="2">
+            <div class="col-md-3 mb-3 ms-2 d-flex justify-content-center" id="2">
                 <div class="container mt-2 mb-2">
                     <div class="input-group">
                         <span class="input-group-text">
@@ -42,8 +42,81 @@
                         <input type="text" class="form-control" id="searchInput" placeholder="Ara .." aria-label="Search" autocomplete="off">
                        
                     </div>
+                    
                 </div>
             </div>
+            <div class="col ms-2 mb-3 justify-content-center">
+                <td>
+                   <div class="d-inline-flex border border-dark rounded-circle bg-transparent shadow-sm mx-3">
+                        <button type="button" id="today" class="btn btn-sm rounded-pill today-btn"  data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-html="true" title="<b>Bugün</b>">                        
+                            <span><small><b>T</b></small></span>
+                        </button>
+                    </div>
+                </td>
+            </div>
+
+             <div class="col mb-3 justify-content-center">
+                
+                <td>
+                    <div class="d-inline-flex border border-dark rounded-circle bg-transparent shadow-sm p-0 mx-0">
+                        <button type="button" id="yesterday" class="btn btn-sm rounded-pill"  data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-html="true" title="<b>Dün</b>">                        
+                            <span><small><b>Y</b></small></span>
+                        </button>
+                    </div>
+                   
+
+                </td>
+             </div>
+
+             <div class="col mb-3 justify-content-center">
+                
+                <td>
+                    <div class="d-inline-flex border border-dark rounded-circle bg-transparent shadow-sm p-0 ms-3">
+                        <button type="button" id="two_days_ago" class="btn btn-sm rounded-pill two_days_ago-btn"  data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-html="true" title="<b>2 gün önce</b>">                        
+                            <span><small><b>-2</b></small></span>
+                        </button>
+                    </div>
+
+                </td>
+             </div>
+
+              <div class="col mb-3 justify-content-center">
+                
+                <td>
+                   <div class="d-inline-flex border border-dark rounded-circle bg-transparent shadow-sm p-0 mx-3">
+                        <button type="button" id="three_days_ago" class="btn btn-sm rounded-pill three_days_ago-btn"  data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-html="true" title="<b>3 gün önce</b>">                        
+                            <span><small><b>-3</b></small></span>
+                        </button>
+                    </div>
+
+                </td>
+             </div>
+
+             <div class="col mb-3 justify-content-center">
+                
+                <td>
+                     <div class="d-inline-flex border border-dark rounded-circle bg-transparent shadow-sm p-0 mx-0">
+                        <button type="button" id="four_days_ago" class="btn btn-sm rounded-pill four_days_ago-btn"  data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-html="true" title="<b>4 gün önce</b>">                        
+                            <span><small><b>-4</b></small></span>
+                        </button>
+                    </div>
+
+                </td>
+             </div>
+
+                 <div class="col mb-3 justify-content-center">
+                
+                <td>
+                     <div class="d-inline-flex border border-dark rounded-circle bg-transparent shadow-sm p-0 ms-3">
+                        <button type="button" id="clearDateFilter" class="btn btn-sm rounded-pill"  data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-html="true" title="<b>Filtreyi Kaldır</b>">                        
+                            <span><small><b>C</b></small></span>
+                        </button>
+                    </div>
+
+                </td>
+             </div>
+
+            
             <div class="col-md-2 mb-3 d-flex justify-content-end" id="3" style="opacity: 0.9;">
                 <span class="badge bg-warning rounded-pill text-dark fs-6" id="total_hours"  data-bs-toggle="tooltip" data-bs-placement="left"  data-bs-html="true" title="<b>Filtrelenen kayıtların toplam eforu (saat) </b>"></span>
             </div>
@@ -336,6 +409,174 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 </script>
+
+
+    <script>
+        // Get references to the button and the input field
+        const todayButton = document.getElementById('today');
+        const yesterdayButton = document.getElementById('yesterday');
+        const twodays_ago_Button = document.getElementById('two_days_ago');
+        const threedays_ago_Button = document.getElementById('three_days_ago');
+        const fourdays_ago_Button = document.getElementById('four_days_ago');
+        const clear_date_filter_Button = document.getElementById('clearDateFilter');
+        
+        const searchInput = document.getElementById('searchInput');
+
+         function formatDate(date) {
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear();
+            return `${day}.${month}.${year}`;
+        }
+
+         function dispatchKeyupEvent(element) {
+            const keyupEvent = new KeyboardEvent('keyup', {
+                key: 'Enter', // Can be any key, 'Enter' is common for triggering search
+                keyCode: 13,
+                which: 13,
+                code: 'Enter',
+                bubbles: true,
+                cancelable: true
+            });
+            element.dispatchEvent(keyupEvent);
+        }
+
+        // Add an event listener to the button
+        todayButton.addEventListener('click', function() {
+            // Get the current date
+            const today = new Date();
+
+            // Get day, month, and year
+            const day = String(today.getDate()).padStart(2, '0'); // Pad with leading zero if single digit
+            const month = String(today.getMonth() + 1).padStart(2, '0'); // Month is 0-indexed, so add 1
+            const year = today.getFullYear();
+
+            // Format the date as DD.MM.YYYY
+            const formattedDate = `${day}.${month}.${year}`;
+
+            // Set the value of the search input
+            searchInput.value = formattedDate;
+
+            searchInput.focus();
+
+        const keyupEvent = new KeyboardEvent('keyup', {
+            key: 'Enter', // Or 'ArrowDown', or any key. For keyup, the specific key often matters less than the event firing.
+            keyCode: 13, // Key code for Enter
+            which: 13,
+            code: 'Enter',
+            bubbles: true,
+            cancelable: true
+        });
+
+            searchInput.dispatchEvent(keyupEvent);
+
+            // Optional: Hide tooltip after click (if it remains open)
+            const tooltipInstance = bootstrap.Tooltip.getInstance(todayButton);
+            if (tooltipInstance) {
+                tooltipInstance.hide();
+            }
+        });
+
+        yesterdayButton.addEventListener('click', function() {
+            const yesterday = new Date();
+            yesterday.setDate(yesterday.getDate() - 1); // Subtract 1 day
+            const formattedDate = formatDate(yesterday);
+
+            searchInput.value = formattedDate;
+            searchInput.focus();
+            dispatchKeyupEvent(searchInput); // Trigger the search function
+
+            // Optional: Hide tooltip after click
+            const tooltipInstance = bootstrap.Tooltip.getInstance(yesterdayButton);
+            if (tooltipInstance) {
+                tooltipInstance.hide();
+            }
+        });
+
+        twodays_ago_Button.addEventListener('click', function() {
+            const dt_two_days_ago = new Date();
+            dt_two_days_ago.setDate(dt_two_days_ago.getDate() - 2);
+            const formattedDate = formatDate(dt_two_days_ago);
+
+            searchInput.value = formattedDate;
+            searchInput.focus();
+            dispatchKeyupEvent(searchInput); // Trigger the search function
+
+            const tooltipInstance_2 = bootstrap.Tooltip.getInstance(twodays_ago_Button);
+            if (tooltipInstance_2) {
+                tooltipInstance_2.hide();
+            }
+        });
+
+        
+        threedays_ago_Button.addEventListener('click', function() {
+            const dt_three_days_ago = new Date();
+            dt_three_days_ago.setDate(dt_three_days_ago.getDate() - 3);
+            const formattedDate = formatDate(dt_three_days_ago);
+
+            searchInput.value = formattedDate;
+            searchInput.focus();
+            dispatchKeyupEvent(searchInput); // Trigger the search function
+
+            // Hide tooltip after click
+            const tooltipInstance = bootstrap.Tooltip.getInstance(yesterdayButton);
+            if (tooltipInstance) {
+                tooltipInstance.hide();
+            }
+
+
+             const tooltipInstance_3 = bootstrap.Tooltip.getInstance(threedays_ago_Button);
+            if (tooltipInstance_3) {
+                tooltipInstance_3.hide();
+            }
+
+             const tooltipInstance_4 = bootstrap.Tooltip.getInstance(fourdays_ago_Button);
+            if (tooltipInstance_4) {
+                tooltipInstance_4.hide();
+            }
+        });
+
+        
+   clear_date_filter_Button.addEventListener('click', function() {
+           
+            searchInput.value ="";
+            searchInput.focus();
+            dispatchKeyupEvent(searchInput); // Trigger the search function
+
+            // Hide tooltip after click
+            const tooltipInstance_c = bootstrap.Tooltip.getInstance(clear_date_filter_Button);
+            if (tooltipInstance_c) {
+                tooltipInstance_c.hide();
+            }
+        });
+
+        
+
+        fourdays_ago_Button.addEventListener('click', function() {
+            const dt_four_days_ago = new Date();
+            dt_four_days_ago.setDate(dt_four_days_ago.getDate() - 4);
+            const formattedDate = formatDate(dt_four_days_ago);
+
+            searchInput.value = formattedDate;
+            searchInput.focus();
+            dispatchKeyupEvent(searchInput); // Trigger the search function
+
+
+             const tooltipInstance_4 = bootstrap.Tooltip.getInstance(fourdays_ago_Button);
+            if (tooltipInstance_4) {
+                tooltipInstance_4.hide();
+            }
+        });
+        // Initialize Bootstrap tooltips (important if you're using them)
+        document.addEventListener('DOMContentLoaded', function () {
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl)
+            })
+        });
+    </script>
+
+
 
   <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script> -->
 {% endblock %}
