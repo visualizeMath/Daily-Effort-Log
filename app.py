@@ -15,12 +15,17 @@ from routes.show_sprints import show_sprints_bp
 from routes.show_logs import show_logs_bp
 from routes.submit_sprint import submit_sprint_bp
 from routes.delete_task import delete_task_bp
+from routes.get_dependent_tasks import get_dependent_task_bp
+from routes.delete_log import delete_log_bp
+from routes.enter_log import enter_log_bp
 
 from global_vars import turkish_month_map
 from global_vars import turkish_number2month
 from global_vars import get_current_month_name
 from global_vars import get_current_month
 from global_vars import get_current_year
+from global_vars import get_tasks_for_sprint
+from global_vars import get_taskname_for_selected_task
 
 app = Flask(__name__)
 
@@ -35,8 +40,10 @@ app.register_blueprint(show_sprints_bp)
 app.register_blueprint(show_logs_bp)
 app.register_blueprint(submit_sprint_bp)
 app.register_blueprint(delete_task_bp)
+app.register_blueprint(get_dependent_task_bp)
+app.register_blueprint(delete_log_bp)
+app.register_blueprint(enter_log_bp)
 
-# db_path = '/app/data/daily_log.db'
 db_path = 'daily_log.db'
 
 def init_db():
@@ -85,27 +92,7 @@ def index():
     # print('Cagrildi:'+str(word2practice[0][1]))
     return render_template('index.html',word2practice=word2practice)
 
-@app.route('/enter_log')
-def enter_log():
-  
-    active_sprints=get_sprints_with_active_tasks()
-    # print(type(active_sprints))
-    # print(active_sprints[0])
-    return render_template('enter_log.html', task_ids=[],active_sprints=active_sprints)
-@app.route('/get_dependent_tasks',methods=['POST'])
 
-def get_dependent_tasks():
-    try:
-        data = request.json
-        sprint_no = data.get('sprint_no')
-        # print('gelen deger sprint: '+sprint_no)
-        dependent_tasks=get_tasks_for_sprint(sprint_no)      
-
-        # Return the task IDs as JSON
-        return jsonify(dependent_tasks),200
-    except Exception as e:
-        print(f"Error fetching task IDs: {e}")
-        return jsonify({'error': str(e)}), 500
 
 @app.route('/get_selectedtaskname',methods=['POST'])
 def get_selectedtaskname():
@@ -121,40 +108,6 @@ def get_selectedtaskname():
         print(f"Error fetching task ID for retrieving task name: {e}")
         return jsonify({'error': str(e)}), 500
 
-
-def get_tasks_for_sprint(sprint_no):
-    conn = sqlite3.connect(db_path)
-    c = conn.cursor()
-    c.execute(f'SELECT pdas_task_id,pdas_task_aciklama FROM pdas WHERE bagli_sprint ={sprint_no} ')
-   
-    dependent_tasks=[]
-
-    for row in c.fetchall():
-        # print('satir: '+row[0]+' \n')
-        spNo=row[0].strip()
-        task_description=row[1].strip()
-        # print(task_description)
-
-        if(len(spNo)>0 and spNo.isdigit()):
-            dependent_tasks.append(spNo+';'+task_description)
-        
-    conn.close()
-    # dependent_tasks=dependent_tasks.sort()
-    return sorted(dependent_tasks)
-
-def get_taskname_for_selected_task(task_id):
-    conn = sqlite3.connect(db_path)
-    c = conn.cursor()
-    c.execute(f'SELECT pdas_task_aciklama FROM pdas WHERE pdas_task_id ={task_id} ')
-   
-    task_name=''
-
-    for row in c.fetchall():
-        current_task_name=row[0].strip()
-        if(len(current_task_name)>0):
-            task_name=current_task_name
-    conn.close()    
-    return task_name
 
 
 
@@ -182,7 +135,7 @@ def submit_log():
     if c.rowcount == 0:
         flash(f'Kayıt oluşturulurken hata oluştu.', 'danger')
     flash(f'{formatted_tarih}- {gun} - {task_aciklama} icin efor kaydı girildi.', 'success')
-    return redirect(url_for('enter_log'))
+    return redirect(url_for('enter_log_bp.enter_log'))
 
 def insert_vocab(file_path):
     conn=sqlite3.connect(db_path)
@@ -241,50 +194,7 @@ def get_downloads_folder():
     else:  # macOS and Linux
         return Path.home() / 'Downloads'
     
-#Delete the selected log record from db  
-@app.route('/delete_log', methods=['POST'])
-def delete_log():
-    data = request.json
-    task_id = data.get('task_id')
-    # print('app.py icinde gelen task id: '+task_id)
 
-    if not task_id:
-        flash(f'{task_id} numaralı efor kaydi bulunamadi.', 'danger')
-        return jsonify({"success": False, "error": "Task ID not provided."}), 400
-        # flash(f'ID bulunamadı: {str(e)}', 'danger')
-    
-    try:
-        # Connect to the database and delete the task
-        conn = sqlite3.connect(db_path)
-        cursor = conn.cursor()
-
-        cursor.execute("select yapilan_is FROM daily_log WHERE id = ?", (task_id,))
-        conn.commit()
-        result= cursor.fetchone()
-
-        if result is not None and result[0]:
-            effort_text=result[0]
-            # print(effort_text)
-            
-
-        if not effort_text and len(effort_text)>15:
-            effort_text=effort_text[:15]+' (...)'
-            # print('effort text: '+effort_text)
-
-        cursor.execute("DELETE FROM daily_log WHERE id = ?", (task_id,))
-        conn.commit()
-        conn.close()
-        # Check if a row was actually deleted
-        if cursor.rowcount == 0:
-            flash(f'Silinecek kayit bulunamadi: {str(e)}', 'danger')
-            return jsonify({"success": False, "error": "Log not found."}), 404
-        # flash('Silindi: {effort_text}!', 'success')
-        flash(f'Silindi: {effort_text}', 'success')
-        return jsonify({"success": True}), 200
-    except Exception as e:
-        flash(f'An error occurred: {str(e)}', 'danger')
-        return jsonify({"success": False, "error": str(e)}), 500
-        # return redirect(url_for('show_logs'))
 
 @app.route('/export',methods=['GET'])
 def export():
@@ -459,18 +369,6 @@ def getword2practice():
         conn.close()
         return None
 
-def get_sprints_with_active_tasks():
-    conn= sqlite3.connect(db_path)
-    cursor =conn.cursor()
-
-
-    # cursor.execute(10 max( bagli_sprint) from pdas where pdas_task_id BETWEEN 4114 and 5000')
-    cursor.execute('select max(sprint_no) from sprints where is_Active="Yes"')
-    
-    available_sprints= cursor.fetchall()
-    conn.close()
-
-    return available_sprints
 
 @app.route('/update_effort_explanation', methods=['POST'])
 def update_effort_explanation():
