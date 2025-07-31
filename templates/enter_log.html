@@ -77,7 +77,7 @@
             <label for="yapilan_is" class="form-label fw-bold  d-flex justify-content-start">Yapılan İş</label>
             <textarea class="form-control" id="yapilan_is" name="yapilan_is" rows="4" autocomplete="off" required></textarea>
         </div>
-        <div class="container d-flex justify-content-center"><button type="submit" class="btn btn-primary fw-bolder">Kaydet</button></div>
+        <div class="container d-flex justify-content-center"><button type="submit" class="btn btn-outline-primary fw-bolde rounded-pill">Kaydet</button></div>
     </form>
 </div>
 
@@ -212,7 +212,7 @@
         selectedDate.addEventListener('change', function() {
             var selected_date_val = selectedDate.value;
             
-            console.log('Selected date val:', selected_date_val); // Debugging
+            // console.log('Selected date val:', selected_date_val); // Debugging
             
             // Create the POST request
             fetch('/get_day_effort', {
@@ -233,11 +233,6 @@
                 var total_efor_field = document.getElementById('total_efor');
                 total_efor_field.innerHTML = ''; // Clear existing options
                 
-                // var yapilanIs = document.getElementById('yapilan_is');//ibod
-                // yapilanIs.innerHTML = ''; // Clear
-                
-                // var task_acklm= document.getElementById('task_aciklama')
-                // console.log(data[0])
                 var total_efor = data[0];
                 if (total_efor=== null) {
                     total_efor=0;
