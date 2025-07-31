@@ -6,6 +6,8 @@
     <form method="post" action="{{ url_for('submit_log') }}">
 
         <div class="row">
+          
+            
             <div class="mb-3 col-4 me-3">
                 <label for="sprint_no" class="form-label fw-bold d-flex justify-content-start">Sprint No</label>
                 <select class="form-select" id="sprint_no" name="sprint_no" required>
@@ -22,8 +24,17 @@
                 <label for="harcanan_efor" class="form-label fw-bold d-flex justify-content-start">Efor</label>
                 <input type="number" step="1" class="form-control" value="8" id="harcanan_efor" name="harcanan_efor" required min="1" max="12">
             </div>
+
+                <div class="col-1 d-flex justify-content-start mb-2 align-items-center mt-3"  style="opacity: 0.7;">
+                 <span class="badge bg-transparent rounded-pill text-success fs-6" id="total_efor"  data-bs-toggle="tooltip" data-bs-placement="left"  data-bs-html="true" title="<b>toplam efor (saat) </b>"></span> 
+                
+            </div>
+
+            
     
         </div>
+
+        
 
         
         <div class="row">
@@ -193,5 +204,53 @@
         });
     });
 </script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var selectedDate = document.getElementById('tarih');
+        
+        selectedDate.addEventListener('change', function() {
+            var selected_date_val = selectedDate.value;
+            
+            console.log('Selected date val:', selected_date_val); // Debugging
+            
+            // Create the POST request
+            fetch('/get_day_effort', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ selected_date: selected_date_val.toString() })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok for selected task id');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Populate the task_aciklama select field
+                var total_efor_field = document.getElementById('total_efor');
+                total_efor_field.innerHTML = ''; // Clear existing options
+                
+                // var yapilanIs = document.getElementById('yapilan_is');//ibod
+                // yapilanIs.innerHTML = ''; // Clear
+                
+                // var task_acklm= document.getElementById('task_aciklama')
+                // console.log(data[0])
+                var total_efor = data[0];
+                if (total_efor=== null) {
+                    total_efor=0;
+                }
+                total_efor_field.textContent="Gün eforu: "+ total_efor;
+                
+            })
+            .catch(error => console.error('Error fetching task IDs:', error));
+            
+        });
+    });
+</script>
+
+
 
 {% endblock %}

@@ -55,7 +55,11 @@ def show_tasks():
          tasks = c.fetchall()
     
          conn.close()
-         return render_template('show_tasks.html', tasks=tasks,selected_sprint=selected_sprint,max_sprint=int(max_sprint[0]))
+         max_sprint_int=-1
+         if max_sprint[0] is not None:
+            max_sprint_int= int(max_sprint[0])
+
+         return render_template('show_tasks.html', tasks=tasks,selected_sprint=selected_sprint,max_sprint=max_sprint_int)
     
     # c.execute('SELECT * FROM pdas order by id desc')
     # pdas_logs = c.fetchall()

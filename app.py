@@ -109,8 +109,36 @@ def get_selectedtaskname():
     except Exception as e:
         print(f"Error fetching task ID for retrieving task name: {e}")
         return jsonify({'error': str(e)}), 500
+    
 
+@app.route('/get_day_effort',methods=['POST'])
+def get_day_effort():
+    try:
+        data = request.json
+        selected_date = data.get('selected_date')
+        # print('gelen deger sprint: '+sprint_no)
+        effort=calculate_total_effort(selected_date)      
 
+        # Return the task IDs as JSON
+        return jsonify(effort),200
+    except Exception as e:
+        print(f"Error fetching effort for selected date: {e}")
+        return jsonify({'error': str(e)}), 500
+
+def calculate_total_effort(selected_date):
+    conn = sqlite3.connect(db_path)
+    c = conn.cursor()
+
+    date_obj = datetime.strptime(selected_date, '%Y-%m-%d')
+    formatted_date = date_obj.strftime('%d.%m.%Y')
+    print(formatted_date)
+    c.execute(f"SELECT  SUM(harcanan_efor) as total_efor FROM daily_log WHERE tarih ='{formatted_date}' ")
+   
+    total_effort=c.fetchone() 
+    
+    conn.close()  
+
+    return total_effort
 
 
 @app.route('/submit_log', methods=['POST'])
@@ -314,20 +342,7 @@ def summary():
         rows_of_weeks=rows_of_weeks,
         turkish_month_name=get_current_month_name()
     )
-'''
-    # Group into rows of 5 items per row
-    # rows_of_circles = [data[i:i + 5] for i in range(0, len(data), 5)]
-    rows_of_circles = []
-    for i in range(0, len(data), 5):
-        row_data = data[i:i + 5]
-        row_total = sum(item['total_efor'] for item in row_data)
-        rows_of_circles.append({'circles': row_data, 'row_total': row_total})
 
-    # word2practice=getword2practice()
-    turkish_month_name=get_current_month_name()
-
-    return render_template('summary.html', rows_of_circles=rows_of_circles,turkish_month_name=turkish_month_name)
-'''
 
 # Determine the color of the circle based on total effort
 def get_color(total_efor):
