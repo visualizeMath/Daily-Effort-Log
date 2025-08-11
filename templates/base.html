@@ -168,20 +168,20 @@
                     <a href="{{ url_for('show_tasks_bp.show_tasks') }}" class="list-group-item list-group-item-action border-bottom-1 border-primary bg-transparent mt-2 mb-2 rounded-pill">
                         <i class="fa-solid fa-eye me-2"></i>Tasklar</a>
                     
-                    <a href="{{ url_for('summary') }}" class="list-group-item list-group-item-action border-bottom-1 border-danger bg-transparent mt-2 mb-2 rounded-pill">
+                    <a href="{{ url_for('summary_bp.summary') }}" class="list-group-item list-group-item-action border-bottom-1 border-danger bg-transparent mt-2 mb-2 rounded-pill">
                         <i class="fa-solid fa-bars me-2"></i>Özet</a>
 
-                     <a href="{{ url_for('show_sprints_bp.show_sprints') }}" class="list-group-item list-group-item-action border-bottom-1 border-dark bg-transparent mt-2 mb-2 rounded-pill">
+                     <a href="{{ url_for('show_sprints_bp.show_sprints') }}" class="list-group-item list-group-item-action border-bottom-1 border-white bg-transparent mt-2 mb-2 rounded-pill">
                         <i class="fa-solid fa-business-time me-2"></i>Sprints</a>
                     
 
-                    <a href="{{ url_for('export') }}" class="list-group-item list-group-item-action border-bottom-1 border-success bg-transparent mt-2 mb-2 rounded-pill">
+                    <a href="{{ url_for('export_bp.export') }}" class="list-group-item list-group-item-action border-bottom-1 border-primary bg-transparent mt-2 mb-2 rounded-pill">
                         <i class="fa-regular fa-share-from-square me-2"></i>Dışa Aktar</a>
                    
                 </div>
                 <div class="container ms-2 mb-3 mt-5">
                     <button id="dark-mode-toggle" class="btn btn-secondary">
-                        <i class="fa-regular fa-moon" id="moonorsun"></i>
+                        <i class="fa-solid fa-solid fa-toggle-off " id="moonorsun"></i>
                     </button>
                 </div>
             </div>
@@ -214,13 +214,17 @@
             var mf = document.getElementById('mainDivEnterLog');
             var mdw = document.getElementById('mainDivWords');
             var todaybtn = document.getElementById('today');
-            var yesterdaybtn = document.getElementById('yesterday');
+            // var c_yesterday = document.getElementById('yesterday');
+            var c_yesterday = document.getElementsByClassName('c_yesterday');
+            
             var mdet = document.getElementById('mainDivEnterTask');
             var listItems = document.getElementsByClassName('list-group-item');
             var detailfordays = document.getElementsByClassName('detailforday');
             var circles = document.getElementsByClassName('circle');
             var dm_toggler = document.getElementById('dark-mode-toggle');
             var moonicon = document.getElementById('moonorsun');
+            var two_days_ago = document.getElementById('two_days_ago');
+
 
             // console.log(detailfordays);
             // console.log("dark mode:"+localStorage.getItem('darkMode'));
@@ -292,15 +296,16 @@
                 {
                     if (todaybtn.classList.contains('text-dark')) {
                         todaybtn.classList.remove('text-dark');
+
                     }
                    
                 }
 
                 
-                if (yesterdaybtn !=null && yesterdaybtn.length>0)
+                if (c_yesterday !=null && c_yesterday.length>0)
                 {
-                    if (yesterdaybtn.classList.contains('text-dark')) {
-                        yesterdaybtn.classList.remove('text-dark');
+                    if (c_yesterday.classList.contains('text-dark')) {
+                        c_yesterday.classList.remove('text-dark');
                     }
                    
                 }
@@ -319,6 +324,13 @@
                         circles[i].classList.add('text-dark');
                     }
                 }
+
+                // if(two_days_ago!=null)
+                // {
+                //     two_days_ago.classList.remove('text-white');
+                //     two_days_ago.classList.add('text-dark');
+
+                // }
                 
                 var home_icon=document.getElementById('main-home-icon');
                 home_icon.style.color="beige";
@@ -337,10 +349,7 @@
                     todaybtn.classList.remove('alert-light');
                 }
 
-                if(yesterdaybtn && yesterdaybtn.hasChildNodes() && yesterdaybtn.classList.contains('alert-light'))
-                {
-                    yesterdaybtn.classList.remove('alert-light');
-                }
+               
 
                 if(mdw && mdw.hasChildNodes() && mdw.classList.contains('alert-light'))
                 {
@@ -367,10 +376,10 @@
 
                 if(moonicon !=null && moonicon.classList!=null)
                 {
-                    if(moonicon.classList.contains('fa-moon'))
+                    if(moonicon.classList.contains('fa-toggle-on'))
                     {
-                        moonicon.classList.remove('fa-moon');   
-                        moonicon.classList.add('fa-sun');   
+                        moonicon.classList.remove('fa-toggle-on');   
+                        moonicon.classList.add('fa-toggle-off');   
                     }
                 }
             
@@ -475,6 +484,12 @@
                             circles[i].classList.remove('text-dark');
                         }
                     }
+
+                    // if(two_days_ago!=null)
+                    // {
+                    //     two_days_ago.classList.remove('text-dark');
+                    // }
+
                 document.body.style.backgroundImage = "url('/static/img/bg.png')";
                 var home_icon=document.getElementById('main-home-icon');
                 
@@ -514,20 +529,21 @@
                         }
                  }
 
-                   if (yesterdaybtn != null && yesterdaybtn.length>0 && yesterdaybtn.classList!=null){
+                   if (c_yesterday != null && c_yesterday.length>0 && c_yesterday.classList!=null){
 
-                        if ( yesterdaybtn.classList.contains('bg-dark')) {
-                             yesterdaybtn.classList.remove('bg-dark');
+                        if ( c_yesterday.classList.contains('bg-dark')) {
+                             c_yesterday.classList.remove('bg-dark');
+                             c_yesterday.classList.add('text-white');
                         }
                    }
                     
 
                 if(moonicon !=null && moonicon.classList!=null)
                 {
-                    if(moonicon.classList.contains('fa-sun'))
+                    if(moonicon.classList.contains('fa-toggle-off'))
                     {
-                        moonicon.classList.remove('fa-sun');   
-                        moonicon.classList.add('fa-moon');   
+                        moonicon.classList.remove('fa-toggle-off');   
+                        moonicon.classList.add('fa-toggle-on');   
                     }
                 }
 
@@ -542,6 +558,8 @@
             var modal_cnt = document.getElementsByClassName('modal-content');
             var home_icon = document.getElementById('main-home-icon');
             var circles = document.getElementsByClassName('circle');
+            var btn_2_da = document.getElementById('two_days_ago');
+
                 // console.log(circles);
               
             // var moonsun_icon = document.getElementById('moonorsun');
@@ -575,14 +593,18 @@
                 mf.classList.toggle('dark-mode');
             }
 
+            if (btn_2_da !=null){
+                btn_2_da.classList.toggle('dark-mode');
+            }
+
             
             if (today_button !=null){
                 today_button.classList.toggle('dark-mode');
             }
 
-             if (yesterday_button !=null){
-                yesterday_button.classList.toggle('dark-mode');
-             }
+            //  if (yesterday_button !=null){
+            //     yesterday_button.classList.toggle('dark-mode');
+            //  }
 
             if (mdw !=null){
                 mdw.classList.toggle('dark-mode');
