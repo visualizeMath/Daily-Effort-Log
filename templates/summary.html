@@ -154,8 +154,8 @@
                     const circleRect = circle.getBoundingClientRect();
                     
                     // Position the detailDiv just above the circle
-                    detailDiv.style.top = (window.scrollY + circleRect.top - detailDiv.offsetHeight + 82) + 'px';
-                    detailDiv.style.left = (window.scrollX + circleRect.left + (circleRect.width / 2) - (detailDiv.offsetWidth / 2)) + 'px';
+                    detailDiv.style.top = (window.scrollY + circleRect.top - detailDiv.offsetHeight -70) + 'px';
+                    detailDiv.style.left = (window.scrollX + circleRect.left + (circleRect.width / 2) - (detailDiv.offsetWidth / 2)+20) + 'px';
 
                     // Show the detailDiv
                     detailDiv.style.display = 'block';

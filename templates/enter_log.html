@@ -7,9 +7,8 @@
 
         <div class="row">
           
-            
-            <div class="mb-3 col-4 me-3">
-                <label for="sprint_no" class="form-label fw-bold d-flex justify-content-start">Sprint No</label>
+            <div class="mb-3 col-3 me-3">
+                <label for="sprint_no" class="form-label fw-bold d-flex justify-content-start">Spr #</label>
                 <select class="form-select" id="sprint_no" name="sprint_no" required>
                     <option value="Select">Select</option>
                     {% if active_sprints %}
@@ -18,29 +17,29 @@
                         {% endfor %}
                     {% endif %}                                
                 </select>
+
+            
             </div>
-    
-            <div class="mb-3 col-3">
-                <label for="harcanan_efor" class="form-label fw-bold d-flex justify-content-start">Efor</label>
-                <input type="number" step="1" class="form-control" value="8" id="harcanan_efor" name="harcanan_efor" required min="1" max="12">
+            <div class="mb-3 col me-2">
+                <label for="tarih" class="form-label fw-bold d-flex justify-content-start">Tarih</label>
+                <input type="date" class="form-control" id="tarih" name="tarih" required>
             </div>
 
-                <div class="col-1 d-flex justify-content-start mb-2 align-items-center mt-3"  style="opacity: 0.7;">
+
+           
+    
+        </div>
+         <div class="col-1 d-flex justify-content-start mb-2 align-items-center align-items-end"  style="opacity: 0.7;">
                  <span class="badge bg-transparent rounded-pill text-success fs-6" id="total_efor"  data-bs-toggle="tooltip" data-bs-placement="left"  data-bs-html="true" title="<b>toplam efor (saat) </b>"></span> 
                 
             </div>
 
-            
-    
-        </div>
-
-        
-
-        
         <div class="row">
-            <div class="mb-3 col-6">
-                <label for="tarih" class="form-label fw-bold d-flex justify-content-start">Tarih</label>
-                <input type="date" class="form-control" id="tarih" name="tarih" required>
+            
+
+             <div class="mb-3 col-3">
+                <label for="harcanan_efor" class="form-label fw-bold d-flex justify-content-start">Efor</label>
+                <input type="number" step="1" class="form-control" value="8" id="harcanan_efor" name="harcanan_efor" required min="1" max="12">
             </div>
 
             <div class="mb-3 col-5">
